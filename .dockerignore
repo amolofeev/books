@@ -1,4 +1,5 @@
 .*
+media/*
 Dockerfile
 docker-compose.yml
 __pycache__

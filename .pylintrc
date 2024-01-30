@@ -3,7 +3,7 @@ extension-pkg-whitelist=
     pydantic,
 extension-pkg-allow-list=
     ujson,
-disable=C0114,
+disable=C0114, # missing-module-docstring
         R0903, # too-few-public-methods
         C0115, # missing-class-docstring
         C0116, # missing-function-docstring
@@ -25,6 +25,7 @@ good-names=
     pd, # pandas
     df, # pandas.DataFrame
     np, # numpy
+    fp, # File Pointer
 
 [FORMAT]
 indent-after-paren=4

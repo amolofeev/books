@@ -1,0 +1,52 @@
+{% extends 'index.html' %}
+{% block extra_css %}
+    <style type="text/css">
+        ul.no-bullets {
+            list-style-type: none; /* Remove bullets */
+            padding: 0; /* Remove padding */
+            margin: 0; /* Remove margins */
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb3">
+        <div class="col-2" style="border: dotted 1px #81a2c3">
+            <ul class="no-bullets">
+                <li>
+                    <a href="/books">Все</a>
+                </li>
+                {% for tag in tags %}
+                    <li>
+                        <a href="?tag={{ tag.id }}">{{ tag.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-10" style="border: solid 1px #81a2c3">
+            <div class="row">
+                {% for book in books %}
+                    <div class="card" style="width: 216px;">
+                        <a href="{{ book.file }}" class="card-img-top">
+                            <img width="210" height="297" src="{{ book.cover }}" alt="{{ book.title }}" class="rounded card-img-top"/>
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">&nbsp;</h5>
+                            <p class="card-text">
+                                <a href="/books/{{ book.id }}">
+                                    {% if book.title %}
+                                        {{ book.title }}
+                                    {% else %}
+                                        {{ book.filename }}
+                                    {% endif %}
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

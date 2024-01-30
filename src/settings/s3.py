@@ -13,7 +13,10 @@ class S3Config(BaseSettings):
         ACCESS_KEY_ID: Optional[str]
         SECRET_ACCESS_KEY: Optional[str]
         ENDPOINT_URL: Optional[str]
-    LIVENESS_URL: str = f'{ENDPOINT_URL}/minio/health/cluster'
+
+    @property
+    def LIVENESS_URL(self):
+        return f'{self.ENDPOINT_URL}/minio/health/cluster'
 
     class Config:
         env_prefix = 'S3_'
