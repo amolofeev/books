@@ -26,6 +26,7 @@ services:
     depends_on:
       - postgres
       - jaeger
+      - kibana
     volumes:
       - .:/www
     env_file:
@@ -43,8 +44,6 @@ services:
     image: elastic/apm-server:7.17.17
     depends_on:
       elasticsearch:
-        condition: service_healthy
-      kibana:
         condition: service_healthy
     cap_add: [ "CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID" ]
     cap_drop: [ "ALL" ]
@@ -85,7 +84,7 @@ services:
   kibana:
     image: kibana:7.17.17
     depends_on:
-      elasticsearch:
+      apm:
         condition: service_healthy
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200

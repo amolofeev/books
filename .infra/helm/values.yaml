@@ -2,9 +2,9 @@ global:
   hostname: k8s.local
 
 app:
-  version: 0.0.0
+  version: 0.0.1
   name: api
-  image: sane4eg/fapi:drop_jaeger_1
+  image: minikube:5000/books
   replicas: 3
   ports:
     - name: http
@@ -16,7 +16,9 @@ app:
     - name: LOG_LEVEL
       value: INFO
     - name: DB_CONNECTION_STRING
-      value: postgresql://postgres:postgres@postgres:5432/postgres
+      value: postgresql+asyncpg://postgres:postgres@postgres:5432/postgres
+    - name: ELASTIC_APM_ENABLED
+      value: "false"
 
 postgres:
   name: postgres
