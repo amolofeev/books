@@ -10,6 +10,11 @@
             </div>
             <div class="col-10" style="border: solid 1px #81a2c3">
                 <div class="row">
+                    <form method="post" action="/books/{{ book.id }}/delete/">
+                        <input type="submit" class="btn btn-danger" />
+                    </form>
+                </div>
+                <div class="row">
                     <form method="post" action="./tags/" enctype="multipart/form-data">
                         <input type="hidden" name="book_id" value="{{ book.id }}"/>
 

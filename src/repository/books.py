@@ -18,3 +18,6 @@ class BookRepository(IBookDAO):
 
     async def create_book(self, file: str, cover: str, filename: str) -> int:
         return await self.dao.create_book(file, cover, filename)
+
+    async def delete_by_id(self, pk: int) -> None:
+        return await self.dao.delete_by_id(pk)

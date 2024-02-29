@@ -18,3 +18,7 @@ class IBookDAO(ABC, metaclass=ABCMeta):
     @abstractmethod
     async def create_book(self, file: str, cover: str, filename: str) -> int:
         ...
+
+    @abstractmethod
+    async def delete_by_id(self, pk: int) -> None:
+        ...

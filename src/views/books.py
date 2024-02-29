@@ -81,6 +81,18 @@ async def books_detail(
     return tpl.render(book=book, tags=book_tags, prev_id=book_id - 1, next_id=book_id + 1)
 
 
+@router.post('/{book_id}/delete/', response_class=RedirectResponse)
+async def books_detail(
+        book_id: int,
+        pool=Depends(pg_pool_dep),
+):
+    async with pool.begin() as conn:
+        PGConnection.set(conn)
+        await uow.tags.delete_tags_for_book(book_id)
+        print(await uow.books.delete_by_id(book_id))
+    return RedirectResponse('/books/', status_code=302)
+
+
 @router.post('/tags/', response_class=RedirectResponse)
 async def set_tags(
         title: str = Form(...),
