@@ -26,7 +26,7 @@ services:
     depends_on:
       - postgres
 #      - jaeger
-#      - kibana
+      - kibana
     volumes:
       - .:/www
     env_file:
