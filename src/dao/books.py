@@ -8,11 +8,12 @@ from src.vars import PGConnection
 
 
 class BooksDAO(IBookDAO):
-    async def books_list(self, tag: Optional[str] = None) -> list[Any]:
+    async def books_list(self, tag: Optional[int] = None) -> list[Any]:
         conn = PGConnection.get()
-        if tag:
+        if tag is not None:
             query = (
                 sa.select(books)
+                .distinct(books.c.filename, books.c.id)
                 .select_from(
                     books
                     .join(
@@ -29,7 +30,24 @@ class BooksDAO(IBookDAO):
             )
         else:
             query = sa.select(books)
-        return (await conn.execute(query.order_by(books.c.filename))).fetchall()
+        return (await conn.execute(query.order_by(books.c.filename, books.c.id))).fetchall()
+
+    async def books_list_without_tag(self) -> list[Any]:
+        conn = PGConnection.get()
+        query = (
+            sa.select(books)
+            .distinct(books.c.filename, books.c.id)
+            .select_from(
+                books
+                .join(
+                    m2m_tag_book,
+                    books.c.id == m2m_tag_book.c.book_id,
+                    isouter=True,
+                )
+            )
+            .where(m2m_tag_book.c.book_id == None)
+        )
+        return (await conn.execute(query.order_by(books.c.filename, books.c.id))).fetchall()
 
     async def get_by_id(self, pk: int) -> Any:
         conn = PGConnection.get()

@@ -8,6 +8,10 @@ class IBookDAO(ABC, metaclass=ABCMeta):
         ...
 
     @abstractmethod
+    async def books_list_without_tag(self) -> list[Any]:
+        ...
+
+    @abstractmethod
     async def get_by_id(self, pk: int) -> Any:
         ...
 

@@ -7,11 +7,13 @@
                 <a href="{{ book.file }}">
                     <img width="210" height="297" src="{{ book.cover }}" alt="{{ book.title or book.filename}}"/>
                 </a>
+                    <a href="/books">Все</a>&nbsp;|&nbsp;<a href="/books/?tag=0">Новые</a>
+
             </div>
             <div class="col-10" style="border: solid 1px #81a2c3">
                 <div class="row">
                     <form method="post" action="/books/{{ book.id }}/delete/">
-                        <input type="submit" class="btn btn-danger" />
+                        <input type="submit" class="btn btn-danger" value="Delete"/>
                     </form>
                 </div>
                 <div class="row">

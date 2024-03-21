@@ -36,7 +36,10 @@ async def books_list(
 ) -> str:
     async with pool.connect() as conn:
         PGConnection.set(conn)
-        book_list = await uow.books.books_list(tag)
+        if tag is None or tag:
+            book_list = await uow.books.books_list(tag)
+        else:
+            book_list = await uow.books.books_list_without_tag()
         tag_list = await uow.tags.tags_list()
     return tpl.render(books=book_list, tags=tag_list)
 
@@ -106,4 +109,4 @@ async def set_tags(
         await uow.tags.delete_tags_for_book(book_id)
         if tags:
             await uow.tags.set_tags_for_book(book_id, tags)
-    return RedirectResponse(f'/books/{book_id + 1}', status_code=302)
+    return RedirectResponse(f'/books/{book_id}', status_code=302)

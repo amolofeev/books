@@ -13,8 +13,11 @@ class BookRepository(IBookDAO):
     async def get_by_id(self, pk: int) -> Any:
         return await self.dao.get_by_id(pk)
 
-    async def books_list(self, tag: Optional[str] = None) -> list[Any]:
+    async def books_list(self, tag: Optional[int] = None) -> list[Any]:
         return await self.dao.books_list(tag)
+
+    async def books_list_without_tag(self) -> list[Any]:
+        return await self.dao.books_list_without_tag()
 
     async def create_book(self, file: str, cover: str, filename: str) -> int:
         return await self.dao.create_book(file, cover, filename)
