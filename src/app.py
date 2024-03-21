@@ -24,8 +24,3 @@ def get_application() -> FastAPI:
 
 
 app = get_application()
-
-
-# @app.exception_handler(Exception)
-# async def handle_exceptions(request: Request, exc: Exception) -> Response:
-#     return Response(content='Ops', status_code=500)
