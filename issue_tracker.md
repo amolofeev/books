@@ -22,3 +22,18 @@
       * [ ] implementation
       * [ ] tests
 * [ ] Data Mappers
+* try events
+  * [ ] Event Driven Architecture
+  * [ ] Event storming
+  * [ ] Event sourcing
+* DTO ?
+  * xml
+    * [ ] input
+    * [ ] output
+  * json
+    * [ ] input
+    * [ ] output
+  * yaml
+    * [ ] input
+    * [ ] output
+* [ ] Helm charts
