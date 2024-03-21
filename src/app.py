@@ -20,10 +20,6 @@ def get_application() -> FastAPI:
     from elasticapm.contrib.starlette import ElasticAPM, make_apm_client
     application.add_middleware(ElasticAPM, client=make_apm_client())
 
-    if settings.jaeger.ENABLED:
-        from src.jaeger import init_jaeger
-        init_jaeger()
-
     return application
 
 

@@ -1,10 +1,11 @@
 from typing import Optional
 
 from prometheus_client import Counter, Summary
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class PodInfo(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix='POD_', env_file='.env', extra='ignore')
     name: Optional[str]
     ip: Optional[str]
     node: Optional[str]
@@ -12,26 +13,16 @@ class PodInfo(BaseSettings):
     image: Optional[str]
     version: Optional[str]
 
-    class Config:
-        env_prefix = 'POD_'
-        env_file = '.env'
-
-
-pod: PodInfo = PodInfo()
-
 
 class LogConfig(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix='LOG_', env_file='.env', extra='ignore')
     LEVEL: str = 'INFO'
     FORMATTER: Optional[str] = 'json'
-    pod: PodInfo = pod
+    pod: PodInfo = PodInfo()
 
     EXTRA: dict = {
-        **{f'pod.{k}': v for k, v in pod.dict().items()}
+        **{f'pod.{k}': v for k, v in pod.model_dump().items()}
     }
-
-    class Config:
-        env_prefix = 'LOG_'
-        env_file = '.env'
 
 
 class Metrics:

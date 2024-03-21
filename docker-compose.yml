@@ -25,20 +25,11 @@ services:
       - 5000:5000
     depends_on:
       - postgres
-#      - jaeger
       - kibana
     volumes:
       - .:/www
     env_file:
       - ./.env
-
-  jaeger:
-    image: jaegertracing/all-in-one
-    ports:
-      - 16686:16686  # webui
-      - 14268:14268  # http collector format=jaeger.thrift
-
-
 
   apm:
     image: elastic/apm-server:7.17.17
@@ -95,18 +86,3 @@ services:
       interval: 10s
       retries: 20
       test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:5601/api/status
-
-
-
-#  minio:
-#    image: minio/minio
-#    ports:
-#      - 9000:9000
-#      - 9001:9001
-#      - 39271:39271
-#    command: server /data --console-address :9001
-#    volumes:
-#      - ./.docker/minio:/data
-#    environment:
-#      - MINIO_ROOT_USER=minioadmin
-#      - MINIO_ROOT_PASSWORD=minioadmin

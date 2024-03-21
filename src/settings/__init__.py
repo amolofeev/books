@@ -3,11 +3,10 @@ import sys
 from typing import Optional
 
 import ujson
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 from .app import AppConfig
 from .db import DBConfig
-from .jaeger import JaegerConfig
 from .log import LogConfig, Metrics
 
 
@@ -16,7 +15,6 @@ class Settings(BaseSettings):
     db: DBConfig = DBConfig()
     log: LogConfig = LogConfig()
     metrics: Metrics = Metrics()
-    jaeger: JaegerConfig = JaegerConfig()
 
 
 settings = Settings()
