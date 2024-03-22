@@ -1,6 +1,7 @@
 import logging
 
 import sqlalchemy as sa
+from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
 from prometheus_client import generate_latest
 from pydantic import BaseModel
@@ -26,10 +27,15 @@ class HealthCheckResponse(BaseModel):
             response_model=HealthCheckResponse,
             responses={500: {'model': HealthCheckResponse}},
             tags=['common'])
+@inject
 async def liveness_handler(
         response: Response,
         pg_engine: AsyncEngine = Depends(pg_pool_dep),
+        di_test_value: str = Depends(Provide['test']),
 ) -> HealthCheckResponse:
+    # TODO: for test purposes only. remove in next iteration
+    assert di_test_value == 'MOCKED', di_test_value
+
     coroutines = {
         'postgres': check_postgres(pg_engine)
     }

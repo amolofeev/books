@@ -34,9 +34,10 @@ async def db_connection(pg_engine: AsyncEngine):
 
 
 @pytest.fixture
-async def application(pg_engine):  # pylint: disable=W0613
+async def application(pg_engine, container):  # pylint: disable=W0613
     """override dependencies"""
     app.dependency_overrides[pg_pool_dep] = lambda: pg_engine
+    app.container = container
 
     yield app
 
@@ -47,3 +48,14 @@ async def application(pg_engine):  # pylint: disable=W0613
 async def client(application):
     """Test http client"""
     yield TestClient(application)
+
+
+@pytest.fixture
+async def container():
+    from src.di.container import init_container
+    from dependency_injector import providers
+    container = init_container(
+        test=providers.Object('MOCKED'),
+    )
+    yield container
+

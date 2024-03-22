@@ -1,4 +1,7 @@
-* [ ] add [Dependency Injector](https://python-dependency-injector.ets-labs.org/)
+* [x] add [Dependency Injector](https://python-dependency-injector.ets-labs.org/)
+  * [x] common tests
+    * [ ] rm common tests
+  * [x] global wiring
 * implement
   * file storage classes with tests
     * FS
