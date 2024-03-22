@@ -1,5 +1,6 @@
 from typing import Any, Optional
 
+from src.dto.books import BookDTO
 from src.interface.books import IBookDAO
 
 
@@ -10,13 +11,13 @@ class BookRepository(IBookDAO):
     async def set_title(self, pk: int, title: str):
         return await self.dao.set_title(pk, title)
 
-    async def get_by_id(self, pk: int) -> Any:
+    async def get_by_id(self, pk: int) -> BookDTO:
         return await self.dao.get_by_id(pk)
 
-    async def books_list(self, tag: Optional[int] = None) -> list[Any]:
+    async def books_list(self, tag: Optional[int] = None) -> list[BookDTO]:
         return await self.dao.books_list(tag)
 
-    async def books_list_without_tag(self) -> list[Any]:
+    async def books_list_without_tag(self) -> list[BookDTO]:
         return await self.dao.books_list_without_tag()
 
     async def create_book(self, file: str, cover: str, filename: str) -> int:

@@ -1,14 +1,16 @@
-from typing import Any, Optional
+from typing import Optional
 
+import msgspec
 import sqlalchemy as sa
 
 from src.db.public import books, m2m_tag_book, tags
+from src.dto.books import BookDTO
 from src.interface.books import IBookDAO
 from src.vars import PGConnection
 
 
 class BooksDAO(IBookDAO):
-    async def books_list(self, tag: Optional[int] = None) -> list[Any]:
+    async def books_list(self, tag: Optional[int] = None) -> list[BookDTO]:
         conn = PGConnection.get()
         if tag is not None:
             query = (
@@ -30,9 +32,10 @@ class BooksDAO(IBookDAO):
             )
         else:
             query = sa.select(books)
-        return (await conn.execute(query.order_by(books.c.filename, books.c.id))).fetchall()
+        result = (await conn.execute(query.order_by(books.c.filename, books.c.id))).fetchall()
+        return msgspec.convert(result, list[BookDTO])
 
-    async def books_list_without_tag(self) -> list[Any]:
+    async def books_list_without_tag(self) -> list[BookDTO]:
         conn = PGConnection.get()
         query = (
             sa.select(books)
@@ -47,11 +50,13 @@ class BooksDAO(IBookDAO):
             )
             .where(m2m_tag_book.c.book_id == None)
         )
-        return (await conn.execute(query.order_by(books.c.filename, books.c.id))).fetchall()
+        result = (await conn.execute(query.order_by(books.c.filename, books.c.id))).fetchall()
+        return msgspec.convert(result, list[BookDTO])
 
-    async def get_by_id(self, pk: int) -> Any:
+    async def get_by_id(self, pk: int) -> BookDTO:
         conn = PGConnection.get()
-        return (await conn.execute(sa.select(books).where(books.c.id == pk))).one()
+        result = (await conn.execute(sa.select(books).where(books.c.id == pk))).one()
+        return msgspec.convert(result, BookDTO)
 
     async def set_title(self, pk: int, title: str):
         conn = PGConnection.get()
@@ -66,7 +71,7 @@ class BooksDAO(IBookDAO):
         return (
             await conn.execute(
                 sa.insert(books)
-                .values(file=file, cover=cover, filename=filename)
+                .values(file=file, cover=cover, filename=filename, title=filename)
                 .returning(books.c.id)
             )
         ).scalars().one()

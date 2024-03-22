@@ -1,18 +1,20 @@
 from abc import ABC, ABCMeta, abstractmethod
-from typing import Any, Optional
+from typing import Optional
+
+from src.dto.books import BookDTO
 
 
 class IBookDAO(ABC, metaclass=ABCMeta):
     @abstractmethod
-    async def books_list(self, tag: Optional[str] = None) -> list[Any]:
+    async def books_list(self, tag: Optional[str] = None) -> list[BookDTO]:
         ...
 
     @abstractmethod
-    async def books_list_without_tag(self) -> list[Any]:
+    async def books_list_without_tag(self) -> list[BookDTO]:
         ...
 
     @abstractmethod
-    async def get_by_id(self, pk: int) -> Any:
+    async def get_by_id(self, pk: int) -> BookDTO:
         ...
 
     @abstractmethod

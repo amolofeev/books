@@ -3,15 +3,18 @@ import os
 import uuid
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Form, UploadFile
-from starlette.responses import HTMLResponse, RedirectResponse
+from fastapi import APIRouter, Depends, UploadFile
+from pydantic import BaseModel
+from starlette.responses import HTMLResponse, RedirectResponse, Response
 
 from src.dao.books import BooksDAO
+from src.dao.m2m_tag_book import M2MTagBookDAO
 from src.dao.tags import TagsDAO
 from src.dependencies import pg_pool_dep, template
 from src.interface.books import IBookDAO
 from src.interface.tags import ITagsDAO
 from src.repository.books import BookRepository
+from src.repository.m2m_tag_book import M2MTagBookRepository
 from src.repository.tags import TagsRepository
 from src.vars import PGConnection
 
@@ -23,6 +26,7 @@ router = APIRouter(prefix='/books')
 class GodObject:
     books: IBookDAO = BookRepository(BooksDAO())
     tags: ITagsDAO = TagsRepository(TagsDAO())
+    m2m: M2MTagBookDAO = M2MTagBookRepository(M2MTagBookDAO())
 
 
 uow = GodObject()
@@ -80,8 +84,9 @@ async def books_detail(
     async with pool.connect() as conn:
         PGConnection.set(conn)
         book = await uow.books.get_by_id(book_id)
-        book_tags = await uow.tags.tags_for_book_by_book_id(book_id)
-    return tpl.render(book=book, tags=book_tags, prev_id=book_id - 1, next_id=book_id + 1)
+        all_tags = await uow.tags.tags_list()
+        book_tags = await uow.m2m.get_tags_for_book(book_id)
+    return tpl.render(book=book, tags=all_tags, book_tags=book_tags)
 
 
 @router.post('/{book_id}/delete/', response_class=RedirectResponse)
@@ -91,22 +96,26 @@ async def books_detail(
 ):
     async with pool.begin() as conn:
         PGConnection.set(conn)
-        await uow.tags.delete_tags_for_book(book_id)
+        await uow.m2m.delete_by_book(book_id)
         print(await uow.books.delete_by_id(book_id))
     return RedirectResponse('/books/', status_code=302)
 
 
+class UpdateBookDTO(BaseModel):
+    book_id: int
+    title: str
+    tags: Optional[list[int]]
+
+
 @router.post('/tags/', response_class=RedirectResponse)
 async def set_tags(
-        title: str = Form(...),
-        book_id: int = Form(...),
-        tags: Optional[list[int]] = Form(...),
+        dto: UpdateBookDTO,
         pool=Depends(pg_pool_dep),
 ):
     async with pool.begin() as conn:
         PGConnection.set(conn)
-        await uow.books.set_title(book_id, title)
-        await uow.tags.delete_tags_for_book(book_id)
-        if tags:
-            await uow.tags.set_tags_for_book(book_id, tags)
-    return RedirectResponse(f'/books/{book_id}', status_code=302)
+        await uow.books.set_title(dto.book_id, dto.title)
+        await uow.m2m.delete_by_book(dto.book_id)
+        if dto.tags:
+            await uow.m2m.set_tags_for_book(dto.book_id, dto.tags)
+    return Response('', status_code=204)

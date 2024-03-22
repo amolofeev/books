@@ -3,14 +3,16 @@ from typing import Any
 import sqlalchemy as sa
 
 from src.db.public import m2m_tag_book, tags
+from src.dto.tags import TagDTO
 from src.interface.tags import ITagsDAO
 from src.vars import PGConnection
 
 
 class TagsDAO(ITagsDAO):
-    async def tags_list(self) -> list[Any]:
+    async def tags_list(self) -> list[TagDTO]:
         conn = PGConnection.get()
-        return (await conn.execute(sa.select(tags).order_by(tags.c.name))).fetchall()
+        result = (await conn.execute(sa.select(tags).order_by(tags.c.name))).fetchall()
+        return result
 
     async def tags_for_book_by_book_id(self, pk: int) -> list[Any]:
         conn = PGConnection.get()
@@ -28,24 +30,3 @@ class TagsDAO(ITagsDAO):
                 ))
             .order_by(tags.c.name))
         ).fetchall()
-
-    async def delete_tags_for_book(self, pk: int):
-        conn = PGConnection.get()
-        await conn.execute(
-            sa.delete(m2m_tag_book)
-            .where(m2m_tag_book.c.book_id == pk)
-        )
-
-    async def set_tags_for_book(self, pk: int, tags: list[int]):
-        if not tags:
-            return
-        conn = PGConnection.get()
-        await conn.execute(
-            m2m_tag_book.insert()
-            .values(
-                [
-                    dict(tag_id=tag_id, book_id=pk)
-                    for tag_id in tags
-                ]
-            )
-        )
