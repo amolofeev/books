@@ -1,8 +1,9 @@
+import sqlalchemy as sa
+import sqlalchemy.dialects.postgresql as pg_sa
+
 from src.db.public import m2m_tag_book
 from src.interface.m2m_tag_book import I_m2m_tag_book_DAO
 from src.vars import PGConnection
-import sqlalchemy as sa
-import sqlalchemy.dialects.postgresql as pg_sa
 
 
 class M2MTagBookDAO(I_m2m_tag_book_DAO):

@@ -52,8 +52,9 @@ async def client(application):
 
 @pytest.fixture
 async def container():
-    from src.di.container import init_container
     from dependency_injector import providers
+
+    from src.di.container import init_container
     container = init_container(
         test=providers.Object('MOCKED'),
     )
