@@ -14,10 +14,16 @@ class PodInfo(BaseSettings):
     version: Optional[str]
 
 
+class APM(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix='ELASTIC_APM_', env_file='.env', extra='ignore')
+    ENABLED: bool
+
+
 class LogConfig(BaseSettings):
     model_config = SettingsConfigDict(env_prefix='LOG_', env_file='.env', extra='ignore')
     LEVEL: str = 'INFO'
     FORMATTER: Optional[str] = 'json'
+    apm: APM = APM()
     pod: PodInfo = PodInfo()
 
     EXTRA: dict = {
