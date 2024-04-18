@@ -20,7 +20,7 @@ config = context.config
 fileConfig(config.config_file_name)
 config.set_main_option(
     "sqlalchemy.url",
-    settings.db.CONNECTION_STRING
+    settings.db.CONNECTION_STRING.replace('+asyncpg', '')
 )
 # add your model's MetaData object here
 # for 'autogenerate' support
@@ -50,7 +50,7 @@ def run_migrations_offline():
     script output.
 
     """
-    url = config.get_main_option(settings.DB_CONNECTION_STRING).replace('+asyncpg', '')
+    url = config.get_main_option(settings.DB_CONNECTION_STRING)
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -71,7 +71,7 @@ def run_migrations_online():
 
     """
     conf = config.get_section(config.config_ini_section)
-    conf['sqlalchemy.url'] = conf['sqlalchemy.url'].replace('+asyncpg', '')
+    conf['sqlalchemy.url'] = conf['sqlalchemy.url']
     connectable = engine_from_config(
         conf,
         prefix="sqlalchemy.",

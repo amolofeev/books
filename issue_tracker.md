@@ -1,7 +1,8 @@
 * [x] add [Dependency Injector](https://python-dependency-injector.ets-labs.org/)
   * [x] common tests
-    * [ ] rm common tests
+    * [x] rm common tests
   * [x] global wiring
+* [x] async migrations (alembic+asyncpg) -> no way! won't fix!
 * implement
   * file storage classes with tests
     * FS

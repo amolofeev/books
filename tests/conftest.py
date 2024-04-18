@@ -55,8 +55,6 @@ async def container():
     from dependency_injector import providers
 
     from src.di.container import init_container
-    container = init_container(
-        test=providers.Object('MOCKED'),
-    )
+    container = init_container()
     yield container
 

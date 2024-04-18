@@ -8,7 +8,6 @@ class Container(containers.DeclarativeContainer):
             "src.services",
         ]
     )
-    test = providers.Object("PRODUCTION")
 
 
 def init_container(**kwargs):
