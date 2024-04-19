@@ -12,7 +12,6 @@ asyncpg==0.27.0
 cachetools==5.3.3
 certifi==2024.2.2
 chardet==5.2.0
-classes==0.4.1
 click==8.1.7
 colorama==0.4.6
 coverage[toml]==7.4.4
@@ -21,6 +20,8 @@ dill==0.3.8
 distlib==0.3.8
 ecs-logging==2.1.0
 elastic-apm==6.21.4.post8347027212
+factory-boy==3.3.0
+faker==24.11.0
 fastapi==0.110.0
 filelock==3.13.1
 greenlet==3.0.3
@@ -52,6 +53,7 @@ pytest==7.3.2
 pytest-asyncio==0.21.0
 pytest-cov==4.1.0
 pytest-mock==3.11.1
+python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 python-multipart==0.0.9
 six==1.16.0
