@@ -1,4 +1,5 @@
-from dependency_injector import containers, providers
+# pylint: disable=c-extension-no-member
+from dependency_injector import containers
 
 
 class Container(containers.DeclarativeContainer):

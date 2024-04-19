@@ -18,11 +18,11 @@ class MetricsMiddleware(BaseHTTPMiddleware):
         timer = TimerCallback()
         with Timer(timer, 'set_result'):
             response = await call_next(request)
-            labels = dict(
-                url=request.scope["path"],
-                method=request.method,
-                status_code=response.status_code
-            )
+            labels = {
+                'url': request.scope["path"],
+                'method': request.method,
+                'status_code': response.status_code,
+            }
 
         settings.metrics.requests_count.labels(**labels).inc(1)
         settings.metrics.requests_latency.labels(**labels).observe(timer.time)

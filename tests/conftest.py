@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 
 from src.app import app
 from src.dependencies import pg_pool_dep
+from src.di.container import init_container
 from src.engine import init_pg_pool
 
 
@@ -52,9 +53,5 @@ async def client(application):
 
 @pytest.fixture
 async def container():
-    from dependency_injector import providers
-
-    from src.di.container import init_container
     container = init_container()
     yield container
-

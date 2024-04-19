@@ -48,7 +48,7 @@ class BooksDAO(IBookDAO):
                     isouter=True,
                 )
             )
-            .where(m2m_tag_book.c.book_id == None)
+            .where(m2m_tag_book.c.book_id == None)  # pylint: disable=singleton-comparison
         )
         result = (await conn.execute(query.order_by(books.c.filename, books.c.id))).fetchall()
         return msgspec.convert(result, list[BookDTO])

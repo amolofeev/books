@@ -18,7 +18,7 @@ class M2MTagBookDAO(I_m2m_tag_book_DAO):
             m2m_tag_book.insert()
             .values(
                 [
-                    dict(tag_id=tag_id, book_id=book_id)
+                    {'tag_id': tag_id, 'book_id': book_id}
                     for tag_id in tags
                 ]
             )

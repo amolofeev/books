@@ -8,6 +8,10 @@ from .routes import init_routes
 from .settings import settings
 
 
+if settings.log.apm.ENABLED:
+    from elasticapm.contrib.starlette import ElasticAPM, make_apm_client
+
+
 def get_application() -> FastAPI:
     """Initialize app"""
     container = init_container()
@@ -22,7 +26,6 @@ def get_application() -> FastAPI:
     application.add_middleware(MetricsMiddleware)
 
     if settings.log.apm.ENABLED:
-        from elasticapm.contrib.starlette import ElasticAPM, make_apm_client
         application.add_middleware(ElasticAPM, client=make_apm_client())
 
     return application

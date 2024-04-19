@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Optional
 
 from src.dto.books import BookDTO
 from src.interface.books import IBookDAO

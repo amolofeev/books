@@ -64,11 +64,11 @@ async def books_create(
     with open(f'media/files/{fid}{cover_ext}', 'wb') as fp:
         while chunk := await cover.read(4096):
             fp.write(chunk)
-    data = dict(
-        file=f'/media/files/{fid}{ext}',
-        cover=f'/media/files/{fid}{cover_ext}',
-        filename=file.filename,
-    )
+    data = {
+        'file': f'/media/files/{fid}{ext}',
+        'cover': f'/media/files/{fid}{cover_ext}',
+        'filename': file.filename
+    }
     async with pool.begin() as conn:
         PGConnection.set(conn)
         data['id'] = await uow.books.create_book(**data)
@@ -90,7 +90,7 @@ async def books_detail(
 
 
 @router.post('/{book_id}/delete/', response_class=RedirectResponse)
-async def books_detail(
+async def books_delete(
         book_id: int,
         pool=Depends(pg_pool_dep),
 ):
@@ -101,6 +101,7 @@ async def books_detail(
     return RedirectResponse('/books/', status_code=302)
 
 
+# TODO: FIXME in next iteration
 class UpdateBookDTO(BaseModel):
     book_id: int
     title: str

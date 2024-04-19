@@ -43,7 +43,7 @@ class JSONFormatter(logging.Formatter):
         return ujson.dumps(result, **self._params)
 
 
-CONFIG_DICT: dict = dict(
+CONFIG_DICT: dict = dict(  # pylint: disable=use-dict-literal
     version=1,
     disable_existing_loggers=False,
     loggers={

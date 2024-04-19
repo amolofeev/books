@@ -1,5 +1,5 @@
 from abc import ABC, ABCMeta, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 from src.dto.tags import TagDTO
 

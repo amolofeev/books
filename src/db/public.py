@@ -23,7 +23,12 @@ m2m_tag_book = sa.Table(
     'm2m_tag_book', meta,
     sa.Column('book_id', sa.BigInteger, nullable=False),
     sa.Column('tag_id', sa.BigInteger, nullable=False),
-    sa.ForeignKeyConstraint(['book_id'], ['books.id'], 'fk_m2m_tag_book_on_book', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(
+        ['book_id'],
+        ['books.id'],
+        'fk_m2m_tag_book_on_book',
+        ondelete='CASCADE',
+    ),
     sa.ForeignKeyConstraint(['tag_id'], ['tags.id'], 'fk_m2m_tag_book_on_tag', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('book_id', 'tag_id', name='pk_m2m_tag_book'),
 )
