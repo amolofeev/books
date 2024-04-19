@@ -18,9 +18,10 @@ config = context.config
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
+DB_CONNECTION_DSN = settings.db.CONNECTION_STRING.replace('+asyncpg', '')
 config.set_main_option(
     "sqlalchemy.url",
-    settings.db.CONNECTION_STRING.replace('+asyncpg', '')
+    DB_CONNECTION_DSN,
 )
 # add your model's MetaData object here
 # for 'autogenerate' support
@@ -50,9 +51,8 @@ def run_migrations_offline():
     script output.
 
     """
-    url = config.get_main_option(settings.DB_CONNECTION_STRING)
     context.configure(
-        url=url,
+        url=DB_CONNECTION_DSN,
         target_metadata=target_metadata,
         literal_binds=True,
         include_schemas=True,
