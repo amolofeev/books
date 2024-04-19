@@ -23,13 +23,13 @@ class TagsDAO(ITagsDAO):
             .join(topq, tags.c.parent_id == topq.c.id)
         )
         recursive_q = topq.union(bottomq)
-        q = (
+        query = (
             sa.select(
                 recursive_q
             )
             .order_by(sa.nullsfirst(recursive_q.c.parent_id), recursive_q.c.name.asc())
         )
-        rows = (await conn.execute(q)).fetchall()
+        rows = (await conn.execute(query)).fetchall()
         return msgspec.convert(rows, list[TagDTO])
 
     async def tags_for_book_by_book_id(self, pk: int) -> list[Any]:

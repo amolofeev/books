@@ -3,43 +3,25 @@ import os
 import uuid
 from typing import Optional
 
+from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, UploadFile
 from pydantic import BaseModel
 from starlette.responses import HTMLResponse, RedirectResponse, Response
-
-from src.dao.books import BooksDAO
-from src.dao.m2m_tag_book import M2MTagBookDAO
-from src.dao.tags import TagsDAO
-from src.dependencies import pg_pool_dep, template
-from src.interface.books import IBookDAO
-from src.interface.tags import ITagsDAO
-from src.repository.books import BookRepository
-from src.repository.m2m_tag_book import M2MTagBookRepository
-from src.repository.tags import TagsRepository
-from src.vars import PGConnection
 
 
 logger = logging.getLogger(__file__)
 router = APIRouter(prefix='/books')
 
 
-class GodObject:
-    books: IBookDAO = BookRepository(BooksDAO())
-    tags: ITagsDAO = TagsRepository(TagsDAO())
-    m2m: M2MTagBookDAO = M2MTagBookRepository(M2MTagBookDAO())
-
-
-uow = GodObject()
-
-
 @router.get('/', response_class=HTMLResponse)
+@inject
 async def books_list(
         tag: Optional[int] = None,
-        pool=Depends(pg_pool_dep),
-        tpl=Depends(template('list.html')),
+        uowm=Depends(Provide['uow']),
+        render=Depends(Provide['render']),
 ) -> str:
-    async with pool.connect() as conn:
-        PGConnection.set(conn)
+    tpl = render.get_template('list.html')
+    async with uowm as uow:
         if tag is None or tag:
             book_list = await uow.books.books_list(tag)
         else:
@@ -49,10 +31,11 @@ async def books_list(
 
 
 @router.post('/')
+@inject
 async def books_create(
         file: UploadFile,
         cover: UploadFile,
-        pool=Depends(pg_pool_dep),
+        uowm=Depends(Provide['uow']),
 ) -> dict:
     fid = uuid.uuid4().hex
     _, ext = os.path.splitext(file.filename)
@@ -65,8 +48,7 @@ async def books_create(
         while chunk := await cover.read(4096):
             fp.write(chunk)
 
-    async with pool.begin() as conn:
-        PGConnection.set(conn)
+    async with uowm as uow:
         book_id = await uow.books.create_book(
             file_path := f'/media/files/{fid}{ext}',
             cover := f'/media/files/{fid}{cover_ext}',
@@ -81,13 +63,14 @@ async def books_create(
 
 
 @router.get('/{book_id}', response_class=HTMLResponse)
+@inject
 async def books_detail(
         book_id: int,
-        tpl=Depends(template('detail.html')),
-        pool=Depends(pg_pool_dep),
+        uowm=Depends(Provide['uow']),
+        render=Depends(Provide['render']),
 ):
-    async with pool.connect() as conn:
-        PGConnection.set(conn)
+    tpl = render.get_template('detail.html')
+    async with uowm as uow:
         book = await uow.books.get_by_id(book_id)
         all_tags = await uow.tags.tags_list()
         book_tags = await uow.m2m.get_tags_for_book(book_id)
@@ -95,12 +78,12 @@ async def books_detail(
 
 
 @router.post('/{book_id}/delete/', response_class=RedirectResponse)
+@inject
 async def books_delete(
         book_id: int,
-        pool=Depends(pg_pool_dep),
+        uowm=Depends(Provide['uow']),
 ):
-    async with pool.begin() as conn:
-        PGConnection.set(conn)
+    async with uowm as uow:
         await uow.m2m.delete_by_book(book_id)
         print(await uow.books.delete_by_id(book_id))
     return RedirectResponse('/books/', status_code=302)
@@ -114,12 +97,12 @@ class UpdateBookDTO(BaseModel):
 
 
 @router.post('/tags/', response_class=RedirectResponse)
+@inject
 async def set_tags(
         dto: UpdateBookDTO,
-        pool=Depends(pg_pool_dep),
+        uowm=Depends(Provide['uow']),
 ):
-    async with pool.begin() as conn:
-        PGConnection.set(conn)
+    async with uowm as uow:
         await uow.books.set_title(dto.book_id, dto.title)
         await uow.m2m.delete_by_book(dto.book_id)
         if dto.tags:

@@ -1,14 +1,12 @@
 import logging
 
 import sqlalchemy as sa
-from dependency_injector.wiring import inject
+from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
 from prometheus_client import generate_latest
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncEngine
 from starlette.responses import PlainTextResponse, Response
-
-from src.dependencies import pg_pool_dep
 
 
 logger = logging.getLogger(__file__)
@@ -30,11 +28,11 @@ class HealthCheckResponse(BaseModel):
 @inject
 async def liveness_handler(
         response: Response,
-        pg_engine: AsyncEngine = Depends(pg_pool_dep),
+        ouwm: AsyncEngine = Depends(Provide['uow']),
 ) -> HealthCheckResponse:
 
     coroutines = {
-        'postgres': check_postgres(pg_engine)
+        'postgres': check_postgres(ouwm)
     }
     service_status = {}
     for service, coroutine in coroutines.items():
@@ -52,9 +50,9 @@ async def liveness_handler(
     return HealthCheckResponse(**service_status)
 
 
-async def check_postgres(pg_pool: AsyncEngine) -> None:
-    async with pg_pool.connect() as conn:
-        await conn.execute(sa.text('select True;'))
+async def check_postgres(uowm) -> None:
+    async with uowm as uow:
+        await uow.connection.execute(sa.text('select True;'))
 
 
 @router.get('/metrics', response_class=PlainTextResponse)

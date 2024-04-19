@@ -7,24 +7,19 @@ from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from src.app import app
-from src.dependencies import pg_pool_dep
 from src.di.container import init_container
-from src.engine import init_pg_pool
 
 
 @pytest.fixture
-async def pg_engine(event_loop):  # pylint: disable=unused-argument
+async def pg_engine(event_loop, container):  # pylint: disable=unused-argument
     """fixture for migrations"""
-    engine = await init_pg_pool()
 
     config = AlembicConfig('alembic.ini')
     alembic_upgrade(config, 'head')
 
-    yield engine
+    yield container._connection_pool
 
     alembic_downgrade(config, 'base')
-
-    await engine.dispose()
 
 
 @pytest.fixture
@@ -37,12 +32,7 @@ async def db_connection(pg_engine: AsyncEngine):
 @pytest.fixture
 async def application(pg_engine, container):  # pylint: disable=W0613
     """override dependencies"""
-    app.dependency_overrides[pg_pool_dep] = lambda: pg_engine
-    app.container = container
-
     yield app
-
-    app.dependency_overrides = {}
 
 
 @pytest.fixture
@@ -53,5 +43,6 @@ async def client(application):
 
 @pytest.fixture
 async def container():
-    container = init_container()
+    container = await init_container()
     yield container
+    await container.shutdown_resources()

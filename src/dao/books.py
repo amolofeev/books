@@ -78,12 +78,9 @@ class BooksDAO(IBookDAO):
 
     async def delete_by_id(self, pk: int) -> None:
         conn = PGConnection.get()
-        return (
-            await conn.execute(
-                sa.delete(books)
-                .where(
-                    books.c.id == pk
-                )
-                .returning(books.c.id)
+        await conn.execute(
+            sa.delete(books)
+            .where(
+                books.c.id == pk
             )
         )
