@@ -64,15 +64,20 @@ async def books_create(
     with open(f'media/files/{fid}{cover_ext}', 'wb') as fp:
         while chunk := await cover.read(4096):
             fp.write(chunk)
-    data = {
-        'file': f'/media/files/{fid}{ext}',
-        'cover': f'/media/files/{fid}{cover_ext}',
-        'filename': file.filename
-    }
+
     async with pool.begin() as conn:
         PGConnection.set(conn)
-        data['id'] = await uow.books.create_book(**data)
-    return data
+        book_id = await uow.books.create_book(
+            file_path := f'/media/files/{fid}{ext}',
+            cover := f'/media/files/{fid}{cover_ext}',
+            filename := file.filename,
+        )
+    return {
+        'id': book_id,
+        'file': file_path,
+        'cover': cover,
+        'filename': filename,
+    }
 
 
 @router.get('/{book_id}', response_class=HTMLResponse)

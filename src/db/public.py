@@ -17,6 +17,13 @@ tags = sa.Table(
     'tags', meta,
     sa.Column('id', sa.BigInteger, primary_key=True),
     sa.Column('name', sa.Text, nullable=False),
+    sa.Column('parent_id', sa.BigInteger, nullable=True),
+    sa.ForeignKeyConstraint(
+        ['parent_id'],
+        ['tags.id'],
+        'tags_parent_fk',
+        ondelete='CASCADE',
+    )
 )
 
 m2m_tag_book = sa.Table(
