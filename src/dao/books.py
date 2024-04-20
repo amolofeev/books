@@ -75,7 +75,7 @@ class BooksDAO(IBookDAO):
                     file=book.file,
                     cover=book.cover,
                     filename=book.filename,
-                    title=(book.title or book.filename),
+                    title=book.title,
                 )
                 .returning(books)
             )

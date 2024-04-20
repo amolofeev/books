@@ -3,7 +3,7 @@ import msgspec
 
 
 class CreateBookDTO(msgspec.Struct, kw_only=True):
-    title: str | None = None
+    title: str
     filename: str
     cover: str
     file: str

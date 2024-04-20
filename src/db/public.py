@@ -10,7 +10,7 @@ books = sa.Table(
     sa.Column('filename', sa.Text, nullable=False),
     sa.Column('cover', sa.Text, nullable=False),
     sa.Column('file', sa.Text, nullable=False),
-    sa.Column('title', sa.Text),
+    sa.Column('title', sa.Text, nullable=False),
 )
 
 tags = sa.Table(

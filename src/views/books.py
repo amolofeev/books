@@ -39,24 +39,23 @@ async def books_create(
         cover: UploadFile,
         uowm=Depends(Provide['uow']),
 ) -> dict:
-    fid = uuid.uuid4().hex
-    _, ext = os.path.splitext(file.filename)
-    with open(f'media/files/{fid}{ext}', 'wb') as fp:
+    _, book_fname = os.path.split(file.filename)
+    with open(f'media/files/{book_fname}', 'wb') as fp:
         while chunk := await file.read(4096):
             fp.write(chunk)
 
-    _, cover_ext = os.path.splitext(cover.filename)
-    with open(f'media/files/{fid}{cover_ext}', 'wb') as fp:
+    _, cover_fname = os.path.split(cover.filename)
+    with open(f'media/files/{cover_fname}', 'wb') as fp:
         while chunk := await cover.read(4096):
             fp.write(chunk)
 
     async with uowm as uow:
         book = await uow.books.create_book(
             CreateBookDTO(
-                file=f'/media/files/{fid}{ext}',
-                cover=f'/media/files/{fid}{cover_ext}',
-                filename=file.filename,
-                title=file.filename
+                file=f'/media/files/{book_fname}',
+                cover=f'/media/files/{cover_fname}',
+                filename=book_fname,
+                title=book_fname
             )
         )
     return msgspec.to_builtins(book)
@@ -83,9 +82,17 @@ async def books_delete(
         book_id: int,
         uowm=Depends(Provide['uow']),
 ):
+    import pathlib
     async with uowm as uow:
+        book: BookDTO = await uow.books.get_by_id(book_id)
+        filepath = pathlib.Path(f'/www{book.file}')
+        coverpath = pathlib.Path(f'/www{book.cover}')
+        if filepath.exists():
+            os.remove(filepath)
+        if coverpath.exists():
+            os.remove(coverpath)
         await uow.m2m.delete_by_book(book_id)
-        print(await uow.books.delete_by_id(book_id))
+        await uow.books.delete_by_id(book_id)
     return RedirectResponse('/books/', status_code=302)
 
 
