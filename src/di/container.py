@@ -53,7 +53,7 @@ class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
         packages=[
             "src.views",
-            "src.services",
+            # "src.services",
         ]
     )
     render = providers.Singleton(
