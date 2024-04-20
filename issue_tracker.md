@@ -3,6 +3,7 @@
     * [x] rm common tests
   * [x] global wiring
 * [x] async migrations (alembic+asyncpg) -> no way! won't fix!
+* [ ] reorganize src/ structure
 * implement
   * file storage classes with tests
     * FS
@@ -13,8 +14,15 @@
       * [ ] tests
   * data storage classes
     * PostgreSQL DAO (alembic, SQLAlchemy-core, asyncpg)
-      * [ ] implementation
-      * [ ] tests
+      * Books
+        * [x] implementation
+        * [ ] tests
+      * Tags
+        * [ ] implementation
+        * [ ] tests
+      * m2m
+        * [ ] implementation
+        * [ ] tests
     * InMemoryStub DAO
       * [ ] implementation
       * [ ] tests
@@ -41,3 +49,5 @@
     * [ ] input
     * [ ] output
 * [ ] Helm charts
+* [ ] migrate to litestar
+* [ ] HTMX
