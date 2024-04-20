@@ -38,3 +38,9 @@ async def container():
     container = await init_container()
     yield container
     await container.shutdown_resources()
+
+
+@pytest.fixture
+async def uowm(container):
+    uow = await container.uow()
+    yield uow

@@ -3,11 +3,13 @@ import os
 import uuid
 from typing import Optional
 
+import msgspec.json
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, UploadFile
 from pydantic import BaseModel
 from starlette.responses import HTMLResponse, RedirectResponse, Response
 
+from src.dto.books import BookDTO, CreateBookDTO
 
 logger = logging.getLogger(__file__)
 router = APIRouter(prefix='/books')
@@ -49,17 +51,15 @@ async def books_create(
             fp.write(chunk)
 
     async with uowm as uow:
-        book_id = await uow.books.create_book(
-            file_path := f'/media/files/{fid}{ext}',
-            cover := f'/media/files/{fid}{cover_ext}',
-            filename := file.filename,
+        book = await uow.books.create_book(
+            CreateBookDTO(
+                file=f'/media/files/{fid}{ext}',
+                cover=f'/media/files/{fid}{cover_ext}',
+                filename=file.filename,
+                title=file.filename
+            )
         )
-    return {
-        'id': book_id,
-        'file': file_path,
-        'cover': cover,
-        'filename': filename,
-    }
+    return msgspec.to_builtins(book)
 
 
 @router.get('/{book_id}', response_class=HTMLResponse)

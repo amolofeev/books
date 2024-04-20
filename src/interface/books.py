@@ -1,7 +1,7 @@
 from abc import ABC, ABCMeta, abstractmethod
 from typing import Optional
 
-from src.dto.books import BookDTO
+from src.dto.books import BookDTO, CreateBookDTO
 
 
 class IBookDAO(ABC, metaclass=ABCMeta):
@@ -22,7 +22,7 @@ class IBookDAO(ABC, metaclass=ABCMeta):
         ...
 
     @abstractmethod
-    async def create_book(self, file: str, cover: str, filename: str) -> int:
+    async def create_book(self, book: CreateBookDTO) -> BookDTO:
         ...
 
     @abstractmethod

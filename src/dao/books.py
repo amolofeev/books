@@ -4,7 +4,7 @@ import msgspec
 import sqlalchemy as sa
 
 from src.db.public import books, m2m_tag_book, tags
-from src.dto.books import BookDTO
+from src.dto.books import BookDTO, CreateBookDTO
 from src.interface.books import IBookDAO
 from src.vars import PGConnection
 
@@ -66,15 +66,21 @@ class BooksDAO(IBookDAO):
             .values(title=title)
         )
 
-    async def create_book(self, file: str, cover: str, filename: str) -> int:
+    async def create_book(self, book: CreateBookDTO) -> BookDTO:
         conn = PGConnection.get()
-        return (
+        row = (
             await conn.execute(
                 sa.insert(books)
-                .values(file=file, cover=cover, filename=filename, title=filename)
-                .returning(books.c.id)
+                .values(
+                    file=book.file,
+                    cover=book.cover,
+                    filename=book.filename,
+                    title=(book.title or book.filename),
+                )
+                .returning(books)
             )
-        ).scalars().one()
+        ).one()
+        return msgspec.convert(row, BookDTO)
 
     async def delete_by_id(self, pk: int) -> None:
         conn = PGConnection.get()
