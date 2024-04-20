@@ -35,9 +35,12 @@
       * [ ] tests
 * [ ] Data Mappers
 * try events
-  * [ ] Event Driven Architecture
   * [ ] Event storming
   * [ ] Event sourcing
+  * [ ] Event Driven Architecture
+    * [ ] message bus 
+      * [ ] local pub-sub
+      * [ ] any MQ
 * DTO ?
   * xml
     * [ ] input
