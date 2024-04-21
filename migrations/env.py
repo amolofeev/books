@@ -9,7 +9,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from src.settings import settings
+from src.di.sqlalchemy_asyncpg import config as settings
 from src.infra.db.postgresql import public
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -18,7 +18,7 @@ config = context.config
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
-DB_CONNECTION_DSN = settings.db.CONNECTION_STRING.replace('+asyncpg', '')
+DB_CONNECTION_DSN = settings.CONNECTION_STRING.replace('+asyncpg', '')
 config.set_main_option(
     "sqlalchemy.url",
     DB_CONNECTION_DSN,

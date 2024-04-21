@@ -6,13 +6,11 @@ import ujson
 from pydantic_settings import BaseSettings
 
 from .app import AppConfig
-from .db import DBConfig
 from .log import LogConfig, Metrics
 
 
 class Settings(BaseSettings):
     app: AppConfig = AppConfig()
-    db: DBConfig = DBConfig()
     log: LogConfig = LogConfig()
     metrics: Metrics = Metrics()
 
