@@ -11,6 +11,6 @@ async def application(migrations, container):  # pylint: disable=W0613
 
 
 @pytest.fixture
-async def client(application):
+async def client(application):  # pylint: disable=redefined-outer-name
     """Test http client"""
     yield TestClient(application)

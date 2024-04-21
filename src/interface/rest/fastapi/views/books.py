@@ -1,6 +1,6 @@
 import logging
 import os
-import uuid
+import pathlib
 from typing import Optional
 
 import msgspec.json
@@ -83,7 +83,6 @@ async def books_delete(
         book_id: int,
         uowm=Depends(Provide['uow']),
 ):
-    import pathlib
     async with uowm as uow:
         book: BookDTO = await uow.books.get_by_id(book_id)
         filepath = pathlib.Path(f'/www{book.file}')

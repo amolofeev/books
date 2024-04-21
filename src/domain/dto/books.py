@@ -16,7 +16,7 @@ class BookDTO(CreateBookDTO):
 class CreateBookFactory(factory.Factory):
     class Meta:
         model = CreateBookDTO
-    title = factory.Sequence(lambda x: str(x))
-    filename = factory.Sequence(lambda x: str(x))
-    cover = factory.Sequence(lambda x: str(x))
-    file = factory.Sequence(lambda x: str(x))
+    title = factory.Sequence(str)
+    filename = factory.Sequence(str)
+    cover = factory.Sequence(str)
+    file = factory.Sequence(str)
