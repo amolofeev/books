@@ -13,4 +13,4 @@ RUN pip install --upgrade pip &&\
 WORKDIR /www
 
 USER www
-CMD ["uvicorn", "src.app:app", "--loop", "uvloop", "--host","0.0.0.0","--port","5000"]
+CMD ["uvicorn", "src.interface.rest.fastapi.app:app", "--loop", "uvloop", "--host","0.0.0.0","--port","5000"]

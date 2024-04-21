@@ -1,5 +1,7 @@
 # pylint: disable=c-extension-no-member
 import dataclasses
+import os
+import pathlib
 from contextlib import asynccontextmanager
 from typing import Any
 
@@ -7,14 +9,14 @@ from dependency_injector import containers, providers
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from src.dao.books import BooksDAO
-from src.dao.m2m_tag_book import M2MTagBookDAO
-from src.dao.tags import TagsDAO
-from src.interface.books import IBookDAO
-from src.interface.tags import ITagsDAO
-from src.repository.books import BookRepository
-from src.repository.m2m_tag_book import M2MTagBookRepository
-from src.repository.tags import TagsRepository
+from src.domain.interface.books import IBookDAO
+from src.domain.interface.tags import ITagsDAO
+from src.infra.dao.postgresql.books import BooksDAO
+from src.infra.dao.postgresql.m2m_tag_book import M2MTagBookDAO
+from src.infra.dao.postgresql.tags import TagsDAO
+from src.infra.repository.books import BookRepository
+from src.infra.repository.m2m_tag_book import M2MTagBookRepository
+from src.infra.repository.tags import TagsRepository
 from src.settings import settings
 from src.vars import PGConnection
 
@@ -52,13 +54,15 @@ async def uow_manager(**kwargs):
 class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
         packages=[
-            "src.views",
-            # "src.services",
+            "src.domain",
+            "src.interface",
         ]
     )
     render = providers.Singleton(
         Environment,
-        loader=FileSystemLoader("/www/templates"),
+        loader=FileSystemLoader(
+            pathlib.Path(os.getcwd())/'src/interface/rest/fastapi/templates'
+        ),
         autoescape=select_autoescape()
     )
     _connection_pool = providers.Resource(

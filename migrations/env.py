@@ -10,7 +10,7 @@ from sqlalchemy import pool
 
 from alembic import context
 from src.settings import settings
-from src.db import public
+from src.infra.db.postgresql import public
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
