@@ -4,6 +4,10 @@
   * [x] global wiring
 * [x] async migrations (alembic+asyncpg) -> no way! won't fix!
 * [ ] reorganize src/ structure
+  * [x] 1st iteration
+  * [ ] mv migrations
+  * [ ] rework src/domain & src/infra
+    * `src/domain/<domain name>/[dto|interface|infra]`
 * implement
   * file storage classes with tests
     * FS
