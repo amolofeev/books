@@ -9,7 +9,7 @@ book = sa.Table(
     'book', meta,
     sa.Column('id', UUID(), nullable=False, primary_key=True),
     sa.Column('title', sa.Text, nullable=False),
-    sa.Column('filename', sa.Text, nullable=False),
+    sa.Column('ext', sa.Text, nullable=False),
     sa.Column('cover', sa.Text, nullable=False),
     sa.Column('file', sa.Text, nullable=False),
 )

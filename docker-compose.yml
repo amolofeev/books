@@ -21,7 +21,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: uvicorn src.interface.rest.fastapi.app:app --host 0.0.0.0 --port 5000 --loop uvloop --workers=1 --reload
+    command: uvicorn src.interface.rest.litestar.app:app --host 0.0.0.0 --port 5000 --loop uvloop --workers=1 --reload --log-level=debug
     ports:
       - 5000:5000
     depends_on:
