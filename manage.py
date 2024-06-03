@@ -10,7 +10,7 @@ def cli():
 @cli.command(short_help='start app')
 def start():
     """Start REST API application."""
-    from src.app import app
+    from src.interface.rest.litestar import app
 
     uvicorn.run(app, host='0.0.0.0', port=5000)
 

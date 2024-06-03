@@ -57,7 +57,7 @@ CONFIG_DICT: dict = dict(  # pylint: disable=use-dict-literal
             'level': settings.log.LEVEL,
             'handlers': ['console'],
             'propagate': False,
-        }
+        },
     },
     handlers={
         'console': {

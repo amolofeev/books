@@ -23,7 +23,7 @@ class BookRepository(IBookDAO):
     async def delete_book(self, book_id: uuid.UUID | str) -> None:
         return await self._dao.delete_book(book_id)
 
-    async def get_list_by_author_id(self, author_id: uuid.UUID | str) -> list[BookDTO]:
+    async def get_list_by_author_id(self, author_id: int) -> list[BookDTO]:
         return await self._dao.get_list_by_author_id(author_id)
 
     async def get_list_by_category_id(self, category_id: int) -> list[BookDTO]:
