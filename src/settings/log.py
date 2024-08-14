@@ -1,6 +1,6 @@
 from typing import Optional
 
-from prometheus_client import Counter, Summary
+from aioprometheus import Counter, Summary
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -34,9 +34,15 @@ class LogConfig(BaseSettings):
 class Metrics:
     requests_count = Counter(
         'requests_count', 'rps',
-        ['url', 'method', 'status_code']
+        # ['url', 'method', 'status_code']
     )
     requests_latency = Summary(
         'requests_latency', 'request latency',
-        ['url', 'method', 'status_code']
+        # ['url', 'method', 'status_code']
     )
+
+    def render(self):
+        import aioprometheus
+        return aioprometheus.render(
+            aioprometheus.REGISTRY, []
+        )

@@ -1,5 +1,6 @@
+import aioprometheus
 from litestar import Router, get
-from litestar.response import Template
+from litestar.response import Template, Response
 
 from src.domain.services.book import get_list_by_category_id
 from src.domain.services.category import get_default_category
@@ -20,9 +21,25 @@ async def index() -> Template:
     )
 
 
+@get('/healthcheck')
+async def healthcheck() -> dict:
+    return {}
+
+
+@get('/metrics')
+async def metrics() -> Response[bytes]:
+    body, headers = aioprometheus.render(aioprometheus.REGISTRY, [])
+    return Response(
+        body,
+        headers=headers
+    )
+
+
 router = Router(
     path='/',
     route_handlers=[
+        healthcheck,
+        metrics,
         index,
         AuthorsHandler,
         BooksHandler,
