@@ -68,12 +68,14 @@ app = Litestar(
         htmx_router,
     ],
     middleware=[
+        # TODO: middlewares can't handle 404, 405
         ASGITracingMiddleware,
         PrometheusMiddleware,
     ],
     template_config=TemplateConfig(
         instance=JinjaTemplateEngine.from_environment(jinja2_env)
     ),
+    # TODO: remove logging_config. useless anymore?
     logging_config=LoggingConfig(
         log_exceptions='always',
         configure_root_logger=False,

@@ -2,6 +2,8 @@ import functools
 import urllib.parse
 from typing import TYPE_CHECKING, Optional, Tuple, Union
 
+from src.interface.rest.litestar.middlewares.common import path_to_route_name
+
 if TYPE_CHECKING:
     from asgiref.typing import ASGIApplication, ASGIReceiveCallable, ASGISendCallable, Scope, ASGISendEvent
 
@@ -50,7 +52,7 @@ class ASGITracingMiddleware:
             self.client.begin_transaction(
                 transaction_type="request", trace_parent=TraceParent.from_headers(scope["headers"])
             )
-            self.set_transaction_name(scope["method"], url_dict['path'])
+            self.set_transaction_name(scope["method"], path_to_route_name(scope['app'], url_dict['path']))
             if scope["method"] in constants.HTTP_WITH_BODY and self.client.config.capture_body != "off":
                 messages = []
                 more_body = True

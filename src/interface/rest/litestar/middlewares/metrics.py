@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING
 
+from src.interface.rest.litestar.middlewares.common import path_to_route_name
+
 if TYPE_CHECKING:
     from asgiref.typing import ASGIApplication, ASGIReceiveCallable, ASGISendCallable, Scope
 
@@ -18,7 +20,7 @@ class PrometheusMiddleware:
         if scope["type"] == "http":
             labels.update(
                 {
-                    'path': scope['path'],
+                    'path':  path_to_route_name(scope['app'], scope['path']),
                     'method': scope['method']
                 }
             )
