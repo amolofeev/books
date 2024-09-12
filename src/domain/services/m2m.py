@@ -1,6 +1,4 @@
 import uuid
-from typing import AsyncGenerator
-
 from dependency_injector.wiring import Provide, inject
 
 from src.di.container import UnitOfWork

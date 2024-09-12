@@ -1,6 +1,5 @@
 import uuid
 
-import sqlalchemy as sa
 import sqlalchemy.dialects.postgresql as pg_sa
 
 from src.domain.interface.m2m_author_book import IM2MAuthorBookDAO

@@ -13,7 +13,7 @@ requires-python = ">=3.11"
 [tool.isort]
 profile = "hug"
 src_paths = ["tests", "src"]
-line_length = 100
+line_length = 120
 multi_line_output = 3
 include_trailing_comma = true
 lines_after_imports = 2
@@ -23,11 +23,11 @@ sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
 default_section = "THIRDPARTY"
 
 [tool.ruff]
-line-length = 80
+line-length = 120
 
 [tool.ruff.lint]
 preview = true
-extend-select = [
+select = [
     #    "DJ",  # flake8-django
     #    "FAST",  # FastAPI
     #    "AIR",  # Airflow
@@ -47,7 +47,7 @@ extend-select = [
     "B", # flake8-bugbear
     "A", # flake8-builtins
     "COM", # flake8-commas
-    "CPY", # flake8-copyright
+    #    "CPY", # flake8-copyright
     "C4", # flake8-comprehensions
     "DTZ", # flake8-datetimez
     "T10", # flake8-debugger
@@ -87,4 +87,14 @@ extend-select = [
     "FURB", # refurb
     "DOC", # pydoclint
     "RUF", # Ruff-specific rules
+]
+ignore = [
+    "D100", # Missing docstring in public module
+    "D101", # Missing docstring in public class
+    "D102", # Missing docstring in public method
+    "D103", # Missing docstring in public function
+    "D104", # Missing docstring in public package
+    "D107", # Missing docstring in `...`
+    "DOC402", # `yield` is not documented in docstring
+    "TCH001", # Move application import `...` into a type-checking block
 ]

@@ -6,7 +6,7 @@ from src.domain.dto.category import CategoryDTO
 
 class ICategoryDAO(ABC, metaclass=ABCMeta):
     @abstractmethod
-    async def create(self, name: str, parent_id: int = None) -> CategoryDTO:
+    async def create(self, name: str, parent_id: int | None = None) -> CategoryDTO:
         ...
 
     @abstractmethod

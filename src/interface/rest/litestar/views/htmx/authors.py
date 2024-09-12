@@ -3,8 +3,8 @@ from litestar.response import Template
 
 
 class AuthorsHandler(Controller):
-    path = '/authors'
+    path = "/authors"
 
-    @get(path='/')
-    async def index(self, request: Request) -> Template:
-        return Template('books/index.html')
+    @get(path="/")
+    async def index(self) -> Template:
+        return Template("books/index.html")

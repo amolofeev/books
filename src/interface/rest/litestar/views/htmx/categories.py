@@ -5,14 +5,14 @@ from src.domain.services.category import get_category_list
 
 
 class CategoriesHandler(Controller):
-    path = '/categories'
+    path = "/categories"
 
-    @get(path='/')
-    async def index(self) -> Template:
+    @get(path="/")
+    async def index(self) -> Template: # noqa: PLR6301
         categories = await get_category_list()
         return Template(
-            'categories/list.html',
+            "categories/list.html",
             context={
-                'categories': categories,
-            }
+                "categories": categories,
+            },
         )

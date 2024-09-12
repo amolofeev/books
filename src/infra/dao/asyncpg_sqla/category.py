@@ -9,7 +9,7 @@ from src.infra.db.postgresql.public import category, m2m_category_book
 from src.vars import PGConnection
 
 
-DEFAULT_CATEGORY_NAME = '-----'
+DEFAULT_CATEGORY_NAME = "-----"
 
 
 class CategoryAsyncpgSQLADAO(ICategoryDAO):
@@ -21,14 +21,13 @@ class CategoryAsyncpgSQLADAO(ICategoryDAO):
             .where(
                 sa.and_(
                     category.c.parent_id.is_(None),
-                    # category.c.name != DEFAULT_CATEGORY_NAME,
                 )
             )
-            .cte('cte', recursive=True)
+            .cte("cte", recursive=True)
         )
 
         bottomq = (
-            sa.select(category.c.id, sa.func.concat_ws(' - ', topq.c.name, category.c.name),
+            sa.select(category.c.id, sa.func.concat_ws(" - ", topq.c.name, category.c.name),
                       category.c.parent_id)
             .join(topq, category.c.parent_id == topq.c.id)
         )
@@ -42,7 +41,7 @@ class CategoryAsyncpgSQLADAO(ICategoryDAO):
         rows = (await conn.execute(query)).fetchall()
         return msgspec.convert(rows, list[CategoryDTO])
 
-    async def create(self, name: str, parent_id: int = None) -> CategoryDTO:
+    async def create(self, name: str, parent_id: int | None = None) -> CategoryDTO:
         conn = PGConnection.get()
         stmt = (
             sa.insert(category)

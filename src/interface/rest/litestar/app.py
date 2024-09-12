@@ -20,15 +20,15 @@ from .views.htmx.router import router as htmx_router
 
 
 htmx_router = Router(
-    path='/',
-    route_handlers=[htmx_router]
+    path="/",
+    route_handlers=[htmx_router],
 )
 
 jinja2_env = Environment(
     loader=FileSystemLoader(
-        Path("/www/src/interface/rest/litestar/views/htmx/templates")
+        Path("/www/src/interface/rest/litestar/views/htmx/templates"),
     ),
-    autoescape=select_autoescape()
+    autoescape=select_autoescape(),
 )
 
 
@@ -37,7 +37,7 @@ class ExceptionFilter(logging.Filter):
         super().__init__(**kwargs)
         self.excluded = [MethodNotAllowedException, NotFoundException]
 
-    def filter(self, record):
+    def filter(self, record) -> bool:
         if record.exc_info:
             etype, _, _ = record.exc_info
             for excluded_exception in self.excluded:
@@ -46,12 +46,12 @@ class ExceptionFilter(logging.Filter):
         return True
 
 
-container: ContextVar['Container'] = ContextVar('Container')
+container: ContextVar["Container"] = ContextVar("Container")
 
 
-async def startup():
+async def startup() -> None:
     container.set(
-        await init_container()
+        await init_container(),
     )
 
 
@@ -68,16 +68,16 @@ app = Litestar(
         htmx_router,
     ],
     middleware=[
-        # TODO: middlewares can't handle 404, 405
+        # TODO: middlewares can"t handle 404, 405
         ASGITracingMiddleware,
         PrometheusMiddleware,
     ],
     template_config=TemplateConfig(
-        instance=JinjaTemplateEngine.from_environment(jinja2_env)
+        instance=JinjaTemplateEngine.from_environment(jinja2_env),
     ),
     # TODO: remove logging_config. useless anymore?
     logging_config=LoggingConfig(
-        log_exceptions='always',
+        log_exceptions="always",
         configure_root_logger=False,
         handlers={
             "queue_listener": {
@@ -85,23 +85,22 @@ app = Litestar(
                 "level": settings.settings.log.LEVEL,
                 "formatter": settings.settings.log.FORMATTER,
             },
-            **settings.CONFIG_DICT['handlers'],
+            **settings.CONFIG_DICT["handlers"],
         },
-        formatters=settings.CONFIG_DICT['formatters'],
+        formatters=settings.CONFIG_DICT["formatters"],
         loggers={
-            **settings.CONFIG_DICT['loggers'],
-            'litestar': {
-                'level': settings.settings.log.LEVEL,
-                'handlers': ['console'],
-                'propagate': False,
-                'filters': ['exception_filter']
+            **settings.CONFIG_DICT["loggers"],
+            "litestar": {
+                "level": settings.settings.log.LEVEL,
+                "handlers": ["console"],
+                "propagate": False,
+                "filters": ["exception_filter"],
             },
         },
         filters={
-            'exception_filter': {
-                '()': ExceptionFilter,
-            }
-        }
-    )
+            "exception_filter": {
+                "()": ExceptionFilter,
+            },
+        },
+    ),
 )
-

@@ -1,3 +1,4 @@
+from src.di.container import Container, UnitOfWork
 from src.domain.dto.book import BookAggregateDTO
 from src.domain.factory.author import AuthorDTOFactory
 from src.domain.factory.book import BookDTOFactory
@@ -8,7 +9,7 @@ from src.domain.services.category import create_category
 from src.domain.services.m2m import m2m_author_book_create, m2m_category_book_create
 
 
-async def test_get_book_by_id(pg_container, uow):
+async def test_get_book_by_id(pg_container: Container, uow: UnitOfWork) -> None:
     book = BookDTOFactory.create()
     async with uow:
         await uow.book.create(book)
@@ -22,7 +23,7 @@ async def test_get_book_by_id(pg_container, uow):
     )
 
 
-async def test_get_books_by_category(pg_container, uow):
+async def test_get_books_by_category(pg_container: Container, uow: UnitOfWork) -> None:
     category = CategoryDTOFactory.create()
     category = await create_category(category.name, category.parent_id)
 
@@ -36,7 +37,7 @@ async def test_get_books_by_category(pg_container, uow):
     assert books_in_category == [book]
 
 
-async def test_get_books_by_author(pg_container, uow):
+async def test_get_books_by_author(pg_container: Container, uow: UnitOfWork) -> None:
     book = BookDTOFactory.create()
     async with uow:
         await uow.book.create(book)

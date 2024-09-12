@@ -1,4 +1,4 @@
 from contextvars import ContextVar
 
 
-PGConnection: ContextVar = ContextVar('PGConnection')
+PGConnection: ContextVar = ContextVar("PGConnection")

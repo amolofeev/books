@@ -1,48 +1,46 @@
-from typing import Optional
-
-from aioprometheus import Counter, Summary
+import aioprometheus
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class PodInfo(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix='POD_', env_file='.env', extra='ignore')
-    name: Optional[str]
-    ip: Optional[str]
-    node: Optional[str]
-    namespace: Optional[str]
-    image: Optional[str]
-    version: Optional[str]
+    model_config = SettingsConfigDict(env_prefix="POD_", env_file=".env", extra="ignore")
+    name: str | None
+    ip: str | None
+    node: str | None
+    namespace: str | None
+    image: str | None
+    version: str | None
 
 
 class APM(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix='ELASTIC_APM_', env_file='.env', extra='ignore')
+    model_config = SettingsConfigDict(env_prefix="ELASTIC_APM_", env_file=".env", extra="ignore")
     ENABLED: bool
 
 
 class LogConfig(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix='LOG_', env_file='.env', extra='ignore')
-    LEVEL: str = 'INFO'
-    FORMATTER: Optional[str] = 'json'
+    model_config = SettingsConfigDict(env_prefix="LOG_", env_file=".env", extra="ignore")
+    LEVEL: str = "INFO"
+    FORMATTER: str | None = "json"
     apm: APM = APM()
     pod: PodInfo = PodInfo()
 
     EXTRA: dict = {
-        **{f'pod.{k}': v for k, v in pod.model_dump().items()}
+        **{f"pod.{k}": v for k, v in pod.model_dump().items()},
     }
 
 
 class Metrics:
-    requests_count = Counter(
-        'requests_count', 'rps',
-        # ['url', 'method', 'status_code']
+    requests_count = aioprometheus.Counter(
+        "requests_count", "rps",
+        # ["url", "method", "status_code"]  # noqa: ERA001
     )
-    requests_latency = Summary(
-        'requests_latency', 'request latency',
-        # ['url', 'method', 'status_code']
+    requests_latency = aioprometheus.Summary(
+        "requests_latency", "request latency",
+        # ["url", "method", "status_code"]   # noqa: ERA001
     )
 
-    def render(self):
-        import aioprometheus
+    @staticmethod
+    def render() -> tuple[bytes, dict]:  # noqa: PLR6301
         return aioprometheus.render(
-            aioprometheus.REGISTRY, []
+            aioprometheus.REGISTRY, [],
         )

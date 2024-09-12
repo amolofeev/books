@@ -15,19 +15,19 @@ class PrometheusMiddleware:
 
     async def __call__(self, scope: "Scope", receive: "ASGIReceiveCallable", send: "ASGISendCallable") -> None:
         labels = {
-            'type': scope['type'],
+            "type": scope["type"],
             **settings.log.EXTRA,
         }
         if scope["type"] == "http":
             labels.update(
                 {
-                    'path':  path_to_route_name(scope['app'], scope['path']),
-                    'method': scope['method']
-                }
+                    "path":  path_to_route_name(scope["app"], scope["path"]),
+                    "method": scope["method"],
+                },
             )
         try:
             await self._app(scope, receive, send)
-        except BaseException:
+        except BaseException:  # noqa: BLE001
             ...
         else:
             ...

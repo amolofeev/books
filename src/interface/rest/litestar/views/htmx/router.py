@@ -1,43 +1,43 @@
-import aioprometheus
 from litestar import Router, get
 from litestar.response import Response, Template
 
 from src.domain.services.book import get_list_by_category_id
 from src.domain.services.category import get_default_category
+from src.settings import settings
 
 from .authors import AuthorsHandler
 from .books import BooksHandler
 from .categories import CategoriesHandler
 
 
-@get(path='/')
+@get(path="/")
 async def index() -> Template:
     default_category = await get_default_category()
     books_in_default_category = await get_list_by_category_id(default_category)
     return Template(
-        'index.html',
+        "index.html",
         context={
-            'books': books_in_default_category,
-        }
+            "books": books_in_default_category,
+        },
     )
 
 
-@get('/healthcheck')
-async def healthcheck() -> dict:
+@get("/healthcheck")
+async def healthcheck() -> dict:  # noqa: RUF029
     return {}
 
 
-@get('/metrics')
-async def metrics() -> Response[bytes]:
-    body, headers = aioprometheus.render(aioprometheus.REGISTRY, [])
+@get("/metrics")
+async def metrics() -> Response[bytes]:  # noqa: RUF029
+    body, headers = settings.metrics.render()
     return Response(
         body,
-        headers=headers
+        headers=headers,
     )
 
 
 router = Router(
-    path='/',
+    path="/",
     route_handlers=[
         healthcheck,
         metrics,
@@ -45,5 +45,5 @@ router = Router(
         AuthorsHandler,
         BooksHandler,
         CategoriesHandler,
-    ]
+    ],
 )

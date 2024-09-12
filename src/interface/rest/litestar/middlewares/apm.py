@@ -1,6 +1,6 @@
 import functools
 import urllib.parse
-from typing import TYPE_CHECKING, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Union
 
 from src.interface.rest.litestar.middlewares.common import path_to_route_name
 
@@ -51,7 +51,8 @@ class ASGITracingMiddleware:
         body = None
         if not self.client.should_ignore_url(url):
             self.client.begin_transaction(
-                transaction_type="request", trace_parent=TraceParent.from_headers(scope["headers"])
+                transaction_type="request",
+                trace_parent=TraceParent.from_headers(scope["headers"]),
             )
             self.set_transaction_name(scope["method"], path_to_route_name(scope['app'], url_dict['path']))
             if scope["method"] in constants.HTTP_WITH_BODY and self.client.config.capture_body != "off":
@@ -66,7 +67,7 @@ class ASGITracingMiddleware:
                 body = str(body_raw, errors="ignore")
 
                 # Dispatch to the ASGI callable
-                async def new_wrapped_receive():
+                async def new_wrapped_receive() -> Any:
                     if messages:
                         return messages.pop(0)
 
@@ -80,8 +81,7 @@ class ASGITracingMiddleware:
         try:
             await self._app(scope, wrapped_receive, send)
             elasticapm.set_transaction_outcome(constants.OUTCOME.SUCCESS, override=False)
-            return
-        except BaseException as exc:
+        except BaseException as exc:  # noqa: BLE001
             self.client.capture_exception()
             elasticapm.set_transaction_result("HTTP 5xx", override=False)
             elasticapm.set_transaction_outcome(constants.OUTCOME.FAILURE, override=True)
@@ -101,7 +101,7 @@ class ASGITracingMiddleware:
                 headers[key] = val
         return headers
 
-    def get_url(self, scope: "Scope", host: Optional[str] = None) -> Tuple[str, dict[str, str]]:
+    def get_url(self, scope: "Scope", host: str | None = None) -> tuple[str, dict[str, str]]:
         url_dict = {}
         scheme = scope.get("scheme", "http")
         server = scope.get("server", None)
@@ -133,10 +133,10 @@ class ASGITracingMiddleware:
         url_dict["full"] = encoding.keyword_field(url)
         return url, url_dict
 
-    def get_ip(self, scope: "Scope", headers: dict) -> Optional[str]:
+    def get_ip(self, scope: "Scope", headers: dict) -> str | None:
         x_forwarded_for = headers.get("x-forwarded-for")
         remote_addr = headers.get("remote-addr")
-        ip: Optional[str] = None
+        ip: str | None = None
         if x_forwarded_for:
             ip = x_forwarded_for.split(",")[0]
         elif remote_addr:
@@ -145,7 +145,7 @@ class ASGITracingMiddleware:
             ip = scope.get("client")[0]
         return ip
 
-    async def get_data_from_request(self, scope: "Scope", event_type: str, body: Optional[str]) -> dict:
+    async def get_data_from_request(self, scope: "Scope", event_type: str, body: str | None) -> dict:
         """Loads data from incoming request for APM capturing.
 
         Args:
@@ -165,9 +165,9 @@ class ASGITracingMiddleware:
         }
         if self.client.config.capture_headers:
             result["headers"] = headers
-        if body and self.client.config.capture_body in ("all", event_type):
+        if body and self.client.config.capture_body in {"all", event_type}:
             result["body"] = body
-        url, url_dict = self.get_url(scope)
+        url, url_dict = self.get_url(scope)  # noqa: F841
         result["url"] = url_dict
 
         return result
@@ -196,8 +196,4 @@ class ASGITracingMiddleware:
         return result
 
     def set_transaction_name(self, method: str, url: str) -> None:
-        """
-        Default implementation sets transaction name to "METHOD unknown route".
-        Subclasses may add framework specific naming.
-        """
         elasticapm.set_transaction_name(f"{method.upper()} {url}")

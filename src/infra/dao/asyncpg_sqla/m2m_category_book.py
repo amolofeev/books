@@ -21,8 +21,8 @@ class M2MCategoryBookAsyncpgSQLADAO(IM2MCategoryBookDAO):
                 sa.and_(
                     m2m_category_book.c.book_id == book_id,
                     m2m_category_book.c.category_id.notin_(categories)
-                )
-            )
+                ),
+            ),
         )
         await conn.execute(rm_stmt)
 
