@@ -1,9 +1,10 @@
 import aioprometheus
 from litestar import Router, get
-from litestar.response import Template, Response
+from litestar.response import Response, Template
 
 from src.domain.services.book import get_list_by_category_id
 from src.domain.services.category import get_default_category
+
 from .authors import AuthorsHandler
 from .books import BooksHandler
 from .categories import CategoriesHandler

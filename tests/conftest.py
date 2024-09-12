@@ -33,6 +33,5 @@ async def container():
 
 
 @pytest.fixture
-async def uow(container) -> AsyncGenerator[UnitOfWork, None]:
-    uow = await container.uow()
-    yield uow
+async def uow(container) -> UnitOfWork:
+    return await container.uow()

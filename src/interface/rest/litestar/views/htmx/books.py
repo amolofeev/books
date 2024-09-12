@@ -2,7 +2,7 @@ import tempfile
 from typing import Annotated
 from uuid import UUID
 
-from litestar import Controller, get, post, delete
+from litestar import Controller, delete, get, post
 from litestar.contrib.htmx.response import HXLocation
 from litestar.datastructures import UploadFile
 from litestar.enums import RequestEncodingType
@@ -12,7 +12,10 @@ from litestar.status_codes import HTTP_302_FOUND
 
 from src.domain.dto.book import BookDTO
 from src.domain.services.book import (
-    create_book, delete_book, get_by_id, get_list_by_category_id,
+    create_book,
+    delete_book,
+    get_by_id,
+    get_list_by_category_id,
     update_book,
 )
 from src.domain.services.category import get_category_list

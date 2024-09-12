@@ -13,9 +13,9 @@ from litestar.template import TemplateConfig
 
 from src import settings
 from src.di.container import Container, init_container
+
 from .middlewares.apm import ASGITracingMiddleware
 from .middlewares.metrics import PrometheusMiddleware
-
 from .views.htmx.router import router as htmx_router
 
 

@@ -1,7 +1,8 @@
 import uuid
 
-import sqlalchemy.dialects.postgresql as pg_sa
 import sqlalchemy as sa
+import sqlalchemy.dialects.postgresql as pg_sa
+
 from src.domain.interface.m2m_category_book import IM2MCategoryBookDAO
 from src.infra.db.postgresql.public import m2m_category_book
 from src.vars import PGConnection

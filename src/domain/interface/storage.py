@@ -1,8 +1,7 @@
+import hashlib
 import os.path
 from abc import ABC, ABCMeta, abstractmethod
 from pathlib import Path
-
-import hashlib
 
 
 class IStorageDAO(ABC, metaclass=ABCMeta):
