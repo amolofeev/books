@@ -92,7 +92,8 @@ services:
   grafana:
     image: grafana/grafana-enterprise
     user: root
-    network_mode: host
+    ports:
+      - 3000:3000
     depends_on:
       - prometheus
     volumes:
@@ -102,7 +103,10 @@ services:
   prometheus:
     image: prom/prometheus:latest
     user: root
-    network_mode: host
+    extra_hosts:
+      - host.docker.internal:172.17.0.1
+    ports:
+      - 9090:9090
     volumes:
       - ./.docker/prometheus/:/etc/prometheus/
       - ./.docker/prometheus.yml:/etc/prometheus/prometheus.yml
