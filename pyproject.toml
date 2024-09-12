@@ -26,7 +26,7 @@ default_section = "THIRDPARTY"
 line-length = 120
 
 [tool.ruff.lint]
-preview = true
+preview = false  # disable unstable rules and fixes (by default)
 select = [
     #    "DJ",  # flake8-django
     #    "FAST",  # FastAPI
