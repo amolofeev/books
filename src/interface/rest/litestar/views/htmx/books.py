@@ -8,7 +8,7 @@ from litestar.contrib.htmx.response import HXLocation
 from litestar.datastructures import UploadFile
 from litestar.enums import RequestEncodingType
 from litestar.params import Body
-from litestar.response import Redirect, Template
+from litestar.response import Template
 from litestar.status_codes import HTTP_302_FOUND
 
 from src.domain.dto.book import BookDTO
@@ -30,17 +30,17 @@ class BooksHandler(Controller):
 
     @post(path="/")
     async def upload_book(
-            self,
-            data: Annotated[
-                dict[str, UploadFile],
-                Body(media_type=RequestEncodingType.MULTI_PART),
-            ],
+        self,
+        data: Annotated[
+            dict[str, UploadFile],
+            Body(media_type=RequestEncodingType.MULTI_PART),
+        ],
     ) -> BookDTO:
         u_file = data["file"]
         u_cover = data["cover"]
         with (
             tempfile.NamedTemporaryFile("wb", suffix=u_file.filename, delete=False) as file,
-            tempfile.NamedTemporaryFile("wb", suffix=u_cover.filename, delete=False) as cover
+            tempfile.NamedTemporaryFile("wb", suffix=u_cover.filename, delete=False) as cover,
         ):
             while chunk := await data["file"].read(4096):
                 file.write(chunk)
@@ -76,12 +76,12 @@ class BooksHandler(Controller):
 
     @post(path="/{book_id:uuid}/edit/title/")
     async def set_book_title_form(
-            self,
-            book_id: UUID,
-            data: Annotated[
-                dict[str, str],
-                Body(media_type=RequestEncodingType.MULTI_PART),
-            ],
+        self,
+        book_id: UUID,
+        data: Annotated[
+            dict[str, str],
+            Body(media_type=RequestEncodingType.MULTI_PART),
+        ],
     ) -> Template:
         await update_book(book_id, title=data["title"])
         book = await get_by_id(book_id)
@@ -108,12 +108,12 @@ class BooksHandler(Controller):
 
     @post(path="/{book_id:uuid}/edit/categories/")
     async def set_book_categories_form(
-            self,
-            book_id: UUID,
-            data: Annotated[
-                dict[str, list[int] | str],
-                Body(media_type=RequestEncodingType.MULTI_PART),
-            ],
+        self,
+        book_id: UUID,
+        data: Annotated[
+            dict[str, list[int] | str],
+            Body(media_type=RequestEncodingType.MULTI_PART),
+        ],
     ) -> Template:
         categories = data.get("categories")
         if categories is None or isinstance(categories, list):

@@ -8,7 +8,7 @@ class CategoriesHandler(Controller):
     path = "/categories"
 
     @get(path="/")
-    async def index(self) -> Template: # noqa: PLR6301
+    async def index(self) -> Template:  # noqa: PLR6301
         categories = await get_category_list()
         return Template(
             "categories/list.html",

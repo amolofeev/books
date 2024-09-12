@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 
 
 class AsyncpgSqlaConfig(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix='ASYNCPG_SQLA_', env_file='.env', extra='ignore')
+    model_config = SettingsConfigDict(env_prefix="ASYNCPG_SQLA_", env_file=".env", extra="ignore")
     CONNECTION_STRING: str
     CONNECTION_TIMEOUT: int = 20
     MIN_POOL_SIZE: int = 1

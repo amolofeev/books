@@ -8,7 +8,6 @@ from src.domain.interface.category import ICategoryDAO
 from src.infra.db.postgresql.public import category, m2m_category_book
 from src.vars import PGConnection
 
-
 DEFAULT_CATEGORY_NAME = "-----"
 
 
@@ -21,14 +20,17 @@ class CategoryAsyncpgSQLADAO(ICategoryDAO):
             .where(
                 sa.and_(
                     category.c.parent_id.is_(None),
-                )
+                ),
             )
             .cte("cte", recursive=True)
         )
 
         bottomq = (
-            sa.select(category.c.id, sa.func.concat_ws(" - ", topq.c.name, category.c.name),
-                      category.c.parent_id)
+            sa.select(
+                category.c.id,
+                sa.func.concat_ws(" - ", topq.c.name, category.c.name),
+                category.c.parent_id,
+            )
             .join(topq, category.c.parent_id == topq.c.id)
         )
         recursive_q = topq.union(bottomq)

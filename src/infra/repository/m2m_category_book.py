@@ -14,8 +14,8 @@ class M2MCategoryBookRepository(IM2MCategoryBookDAO):
         return await self._dao.delete(category_id, book_id)
 
     async def set_categories_for_book(
-            self,
-            book_id: uuid.UUID | str,
-            categories: list[int],
+        self,
+        book_id: uuid.UUID | str,
+        categories: list[int],
     ) -> None:
         return await self._dao.set_categories_for_book(book_id, categories)

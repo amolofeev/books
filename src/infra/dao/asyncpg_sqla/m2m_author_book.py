@@ -13,7 +13,7 @@ class M2MAuthorBookAsyncpgSQLADAO(IM2MAuthorBookDAO):
         stmt = (
             pg_sa.insert(m2m_author_book)
             .values(author_id=author_id, book_id=book_id)
-            .on_conflict_do_nothing(index_elements=['author_id', 'book_id'])
+            .on_conflict_do_nothing(index_elements=["author_id", "book_id"])
         )
         await conn.execute(stmt)
 

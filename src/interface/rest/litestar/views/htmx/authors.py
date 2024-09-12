@@ -1,4 +1,4 @@
-from litestar import Controller, Request, get
+from litestar import Controller, get
 from litestar.response import Template
 
 

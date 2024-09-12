@@ -17,15 +17,15 @@ async def create_aggregate(book_id: uuid.UUID | str, uow: UnitOfWork) -> BookAgg
         book=book,
         authors=authors,
         categories=categories,
-        categories_id=categories_ids
+        categories_id=categories_ids,
     )
 
 
 @inject
 async def create_book(
-        file: Path,
-        cover: Path,
-        uow: UnitOfWork = Provide['uow'],
+    file: Path,
+    cover: Path,
+    uow: UnitOfWork = Provide["uow"],
 ) -> BookDTO:
     book_id = await uow.storage.generate_hash(file)
     file_ext = await uow.storage.get_file_ext(file)
@@ -34,8 +34,8 @@ async def create_book(
         if await uow.book.exists(book_id):
             return await uow.book.get_by_id(book_id)
 
-    file_key = await uow.storage.save_file(file, 'files', f'{book_id}{file_ext}')
-    cover_key = await uow.storage.save_file(cover, 'files', f'{book_id}{cover_ext}')
+    file_key = await uow.storage.save_file(file, "files", f"{book_id}{file_ext}")
+    cover_key = await uow.storage.save_file(cover, "files", f"{book_id}{cover_ext}")
     async with uow:
         new_book = await uow.book.create(
             BookDTO(
@@ -44,7 +44,7 @@ async def create_book(
                 file=file_key,
                 cover=cover_key,
                 ext=file_ext,
-            )
+            ),
         )
         default_category_id = await uow.category.get_default_category_id()
         await uow.m2m_category_book.create(default_category_id, book_id)
@@ -53,10 +53,10 @@ async def create_book(
 
 @inject
 async def update_book(
-        book_id: uuid.UUID | str,
-        *,
-        uow: UnitOfWork = Provide['uow'],
-        **kwargs,
+    book_id: uuid.UUID | str,
+    *,
+    uow: UnitOfWork = Provide["uow"],
+    **kwargs,
 ) -> BookAggregateDTO:
     async with uow:
         await uow.book.update_book(book_id, **kwargs)
@@ -65,10 +65,9 @@ async def update_book(
 
 @inject
 async def delete_book(
-        book_id: uuid.UUID | str,
-        uow: UnitOfWork = Provide['uow'],
+    book_id: uuid.UUID | str,
+    uow: UnitOfWork = Provide["uow"],
 ) -> None:
-
     async with uow:
         try:
             book = await uow.book.get_by_id(book_id)
@@ -82,8 +81,8 @@ async def delete_book(
 
 @inject
 async def get_by_id(
-        book_id: uuid.UUID | str,
-        uow: UnitOfWork = Provide['uow'],
+    book_id: uuid.UUID | str,
+    uow: UnitOfWork = Provide["uow"],
 ) -> BookAggregateDTO:
     async with uow:
         return await create_aggregate(book_id, uow)
@@ -91,8 +90,8 @@ async def get_by_id(
 
 @inject
 async def get_list_by_category_id(
-        category_id: int,
-        uow: UnitOfWork = Provide['uow'],
+    category_id: int,
+    uow: UnitOfWork = Provide["uow"],
 ) -> list[BookDTO]:
     async with uow:
         return await uow.book.get_list_by_category_id(category_id)
@@ -100,8 +99,8 @@ async def get_list_by_category_id(
 
 @inject
 async def get_list_by_author_id(
-        author_id: int,
-        uow: UnitOfWork = Provide['uow'],
+    author_id: int,
+    uow: UnitOfWork = Provide["uow"],
 ) -> list[BookDTO]:
     async with uow:
         return await uow.book.get_list_by_author_id(author_id)

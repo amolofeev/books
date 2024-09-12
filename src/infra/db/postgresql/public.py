@@ -1,12 +1,12 @@
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import UUID
 
-
 meta = sa.MetaData(schema="public")
 
 
 book = sa.Table(
-    "book", meta,
+    "book",
+    meta,
     sa.Column("id", UUID(), nullable=False, primary_key=True),
     sa.Column("title", sa.Text, nullable=False),
     sa.Column("ext", sa.Text, nullable=False),
@@ -15,13 +15,15 @@ book = sa.Table(
 )
 
 author = sa.Table(
-    "author", meta,
+    "author",
+    meta,
     sa.Column("id", sa.BigInteger, primary_key=True),
     sa.Column("name", sa.Text, nullable=False),
 )
 
 category = sa.Table(
-    "category", meta,
+    "category",
+    meta,
     sa.Column("id", sa.BigInteger, primary_key=True),
     sa.Column("name", sa.Text, nullable=False),
     sa.Column("parent_id", sa.BigInteger, nullable=True),
@@ -34,7 +36,8 @@ category = sa.Table(
 )
 
 m2m_category_book = sa.Table(
-    "m2m_category_book", meta,
+    "m2m_category_book",
+    meta,
     sa.Column("book_id", UUID(), nullable=False),
     sa.Column("category_id", sa.BigInteger, nullable=False),
     sa.PrimaryKeyConstraint("book_id", "category_id", name="pk_m2m_category_book"),
@@ -53,7 +56,8 @@ m2m_category_book = sa.Table(
 )
 
 m2m_author_book = sa.Table(
-    "m2m_author_book", meta,
+    "m2m_author_book",
+    meta,
     sa.Column("book_id", UUID(), nullable=False),
     sa.Column("author_id", sa.BigInteger, nullable=False),
     sa.PrimaryKeyConstraint("book_id", "author_id", name="pk_m2m_author_book"),

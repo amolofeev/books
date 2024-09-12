@@ -8,5 +8,5 @@ class CategoryDTOFactory(factory.Factory):
         model = CategoryDTO
 
     id = factory.Sequence(int)
-    name = factory.Sequence(lambda x: f'Category name {x}')
+    name = factory.Sequence(lambda x: f"Category name {x}")
     parent_id = None

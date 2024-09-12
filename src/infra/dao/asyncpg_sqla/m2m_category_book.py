@@ -10,9 +10,9 @@ from src.vars import PGConnection
 
 class M2MCategoryBookAsyncpgSQLADAO(IM2MCategoryBookDAO):
     async def set_categories_for_book(
-            self,
-            book_id: uuid.UUID | str,
-            categories: list[int],
+        self,
+        book_id: uuid.UUID | str,
+        categories: list[int],
     ) -> None:
         conn = PGConnection.get()
         rm_stmt = (
@@ -20,7 +20,7 @@ class M2MCategoryBookAsyncpgSQLADAO(IM2MCategoryBookDAO):
             .where(
                 sa.and_(
                     m2m_category_book.c.book_id == book_id,
-                    m2m_category_book.c.category_id.notin_(categories)
+                    m2m_category_book.c.category_id.notin_(categories),
                 ),
             ),
         )
@@ -29,12 +29,12 @@ class M2MCategoryBookAsyncpgSQLADAO(IM2MCategoryBookDAO):
         if categories:
             add_stmt = (
                 pg_sa.insert(m2m_category_book)
-                .on_conflict_do_nothing(index_elements=['book_id', 'category_id'])
+                .on_conflict_do_nothing(index_elements=["book_id", "category_id"])
             )
             await conn.execute(
                 add_stmt,
                 [
-                    {'book_id': book_id, 'category_id': category_id}
+                    {"book_id": book_id, "category_id": category_id}
                     for category_id in categories
                 ]
             )
@@ -44,7 +44,7 @@ class M2MCategoryBookAsyncpgSQLADAO(IM2MCategoryBookDAO):
         stmt = (
             pg_sa.insert(m2m_category_book)
             .values(category_id=category_id, book_id=book_id)
-            .on_conflict_do_nothing(index_elements=['category_id', 'book_id'])
+            .on_conflict_do_nothing(index_elements=["category_id", "book_id"])
         )
         await conn.execute(stmt)
 

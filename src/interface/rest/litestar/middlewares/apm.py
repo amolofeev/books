@@ -4,9 +4,8 @@ from typing import TYPE_CHECKING, Any, Union
 
 from src.interface.rest.litestar.middlewares.common import path_to_route_name
 
-
 if TYPE_CHECKING:
-    from asgiref.typing import ASGIApplication, ASGIReceiveCallable, ASGISendCallable, Scope, ASGISendEvent
+    from asgiref.typing import ASGIApplication, ASGIReceiveCallable, ASGISendCallable, ASGISendEvent, Scope
 
 import elasticapm
 from elasticapm import Client, get_client, instrument
@@ -54,7 +53,7 @@ class ASGITracingMiddleware:
                 transaction_type="request",
                 trace_parent=TraceParent.from_headers(scope["headers"]),
             )
-            self.set_transaction_name(scope["method"], path_to_route_name(scope['app'], url_dict['path']))
+            self.set_transaction_name(scope["method"], path_to_route_name(scope["app"], url_dict["path"]))
             if scope["method"] in constants.HTTP_WITH_BODY and self.client.config.capture_body != "off":
                 messages = []
                 more_body = True
@@ -156,6 +155,7 @@ class ASGITracingMiddleware:
 
         Returns:
             dict
+
         """
         headers = self.get_headers(scope)
         result = {
@@ -182,6 +182,7 @@ class ASGITracingMiddleware:
 
         Returns:
             dict
+
         """
         result = {}
 

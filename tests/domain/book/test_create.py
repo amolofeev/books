@@ -3,7 +3,6 @@ from pathlib import Path
 from src.di.container import Container
 from src.domain.services.book import create_book
 
-
 FILE = Path("/www/media/test.txt")
 COVER = Path("/www/media/test.png")
 

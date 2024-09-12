@@ -31,16 +31,19 @@ class LogConfig(BaseSettings):
 
 class Metrics:
     requests_count = aioprometheus.Counter(
-        "requests_count", "rps",
+        "requests_count",
+        "rps",
         # ["url", "method", "status_code"]  # noqa: ERA001
     )
     requests_latency = aioprometheus.Summary(
-        "requests_latency", "request latency",
+        "requests_latency",
+        "request latency",
         # ["url", "method", "status_code"]   # noqa: ERA001
     )
 
     @staticmethod
-    def render() -> tuple[bytes, dict]:  # noqa: PLR6301
+    def render() -> tuple[bytes, dict]:
         return aioprometheus.render(
-            aioprometheus.REGISTRY, [],
+            aioprometheus.REGISTRY,
+            [],
         )

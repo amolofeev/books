@@ -20,7 +20,7 @@ class AuthorAsyncpgSQLADAO(IAuthorDAO):
         new_row = (await conn.execute(stmt)).one()
         return msgspec.convert(new_row, AuthorDTO)
 
-    async def get_list_by_book_id(self, book_id: uuid.UUID|str) -> list[AuthorDTO]:
+    async def get_list_by_book_id(self, book_id: uuid.UUID | str) -> list[AuthorDTO]:
         conn = PGConnection.get()
         stmt = (
             sa.select(author)

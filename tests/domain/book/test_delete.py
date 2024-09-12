@@ -4,7 +4,6 @@ from src.di.container import Container, UnitOfWork
 from src.domain.factory.book import BookDTOFactory
 from src.domain.services.book import create_book, delete_book
 
-
 FILE = Path("/www/media/test.txt")
 COVER = Path("/www/media/test.png")
 

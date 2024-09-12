@@ -6,8 +6,8 @@ from src.domain.dto.author import AuthorDTO
 
 @inject
 async def create_author(
-        name: str,
-        uow: UnitOfWork = Provide['uow'],
+    name: str,
+    uow: UnitOfWork = Provide["uow"],
 ) -> AuthorDTO:
     async with uow:
         return await uow.author.create(name)

@@ -10,7 +10,7 @@ class BookDTOFactory(factory.Factory):
         model = BookDTO
 
     id = factory.Sequence(lambda x: uuid.uuid4())
-    title = factory.Sequence(lambda x: f'Lorem Ipsum {x}')
-    ext = '.txt'
-    file = '/files/test.txt'
-    cover = '/files/test.png'
+    title = factory.Sequence(lambda x: f"Lorem Ipsum {x}")
+    ext = ".txt"
+    file = "/files/test.txt"
+    cover = "/files/test.png"
