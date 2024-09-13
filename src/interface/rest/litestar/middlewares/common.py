@@ -1,9 +1,6 @@
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from asgiref.typing import ASGIApplication
+from litestar import Litestar
 
 
-def path_to_route_name(app: ASGIApplication, path: str) -> str:
+def path_to_route_name(app: Litestar, path: str) -> str:
     app, handler, path, params = app.asgi_router.handle_routing(path, "OPTIONS")
     return next(iter(handler.paths))
