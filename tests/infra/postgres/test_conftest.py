@@ -3,6 +3,7 @@
 import pytest
 import sqlalchemy as sa
 from sqlalchemy.exc import ProgrammingError
+
 from src.di.container import Container, UnitOfWork
 from src.infra.db.postgresql.public import book
 

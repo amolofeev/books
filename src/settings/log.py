@@ -30,15 +30,13 @@ class LogConfig(BaseSettings):
 
 
 class Metrics:
-    requests_count = aioprometheus.Counter(
-        "requests_count",
-        "rps",
-        # ["url", "method", "status_code"]  # noqa: ERA001
+    http_requests_count = aioprometheus.Counter(
+        "http_requests_count",
+        "http_requests_count",
     )
-    requests_latency = aioprometheus.Summary(
-        "requests_latency",
-        "request latency",
-        # ["url", "method", "status_code"]   # noqa: ERA001
+    http_requests_latency = aioprometheus.Summary(
+        "http_requests_latency",
+        "http_requests_latency",
     )
 
     @staticmethod

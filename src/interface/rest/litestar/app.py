@@ -18,6 +18,7 @@ from .middlewares.apm import ASGITracingMiddleware
 from .middlewares.metrics import PrometheusMiddleware
 from .views.htmx.router import router as htmx_router
 
+
 htmx_router = Router(
     path="/",
     route_handlers=[htmx_router],

@@ -1,6 +1,7 @@
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import UUID
 
+
 meta = sa.MetaData(schema="public")
 
 

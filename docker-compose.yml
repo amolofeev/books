@@ -25,6 +25,7 @@ services:
     depends_on:
       - postgres
       - kibana
+      - grafana
     volumes:
       - .:/www
     env_file:

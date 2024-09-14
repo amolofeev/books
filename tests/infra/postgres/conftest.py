@@ -2,6 +2,7 @@ import pytest
 from alembic.command import downgrade as alembic_downgrade
 from alembic.command import upgrade as alembic_upgrade
 from alembic.config import Config as AlembicConfig
+
 from src.di.container import Container, init_container
 
 

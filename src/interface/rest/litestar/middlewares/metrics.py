@@ -1,34 +1,37 @@
+import time
 from typing import TYPE_CHECKING
 
 from src.interface.rest.litestar.middlewares.common import path_to_route_name
 
+
 if TYPE_CHECKING:
-    from asgiref.typing import ASGIApplication, ASGIReceiveCallable, ASGISendCallable, Scope
+    from litestar.types import Receive, Send, Scope, Message
+
+from litestar.enums import ScopeType
+from litestar.middleware import AbstractMiddleware
 
 from src.settings import settings
 
 
-class PrometheusMiddleware:
-    def __init__(self, app: "ASGIApplication", **options) -> None:
-        self._app = app
+class PrometheusMiddleware(AbstractMiddleware):
+    scopes = {ScopeType.HTTP}
 
-    async def __call__(self, scope: "Scope", receive: "ASGIReceiveCallable", send: "ASGISendCallable") -> None:
+    async def __call__(self, scope: "Scope", receive: "Receive", send: "Send") -> None:
         labels = {
-            "type": scope["type"],
             **settings.log.EXTRA,
+            "path": path_to_route_name(scope["app"], scope["path"]),
+            "method": scope["method"],
         }
-        if scope["type"] == "http":
-            labels.update(
-                {
-                    "path": path_to_route_name(scope["app"], scope["path"]),
-                    "method": scope["method"],
-                },
-            )
-        try:
-            await self._app(scope, receive, send)
-        except BaseException:  # noqa: BLE001
-            ...
-        else:
-            ...
-        finally:
-            settings.metrics.requests_count.inc(labels)
+
+        request_start_ns = time.perf_counter_ns()
+
+        async def wrap_send(message: "Message") -> None:
+            if message['type'] == "http.response.start":
+                request_end_ns = time.perf_counter_ns()
+                request_durtion_ms = (request_end_ns - request_start_ns) // 1000000
+                labels.update({"status_code": message['status']})
+                settings.metrics.http_requests_count.inc(labels)
+                settings.metrics.http_requests_latency.observe(labels, request_durtion_ms)
+            await send(message)
+
+        await self.app(scope, receive, wrap_send)

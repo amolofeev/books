@@ -8,6 +8,7 @@ from src.domain.interface.category import ICategoryDAO
 from src.infra.db.postgresql.public import category, m2m_category_book
 from src.vars import PGConnection
 
+
 DEFAULT_CATEGORY_NAME = "-----"
 
 
