@@ -50,6 +50,8 @@ router = Router(
     path="/",
     route_handlers=[
         healthcheck,
+        liveness,
+        readiness,
         metrics,
         index,
         AuthorsHandler,
