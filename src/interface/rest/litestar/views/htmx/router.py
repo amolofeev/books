@@ -23,9 +23,17 @@ async def index() -> Template:
 
 
 @get("/healthcheck")
-@get("/liveness")
-@get("/readiness")
 async def healthcheck() -> dict:  # noqa: RUF029
+    return {}
+
+
+@get("/liveness")
+async def liveness() -> dict:  # noqa: RUF029
+    return {}
+
+
+@get("/readiness")
+async def readiness() -> dict:  # noqa: RUF029
     return {}
 
 
