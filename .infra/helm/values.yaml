@@ -3,8 +3,8 @@ global:
 
 app:
   version: 0.0.1
-  name: api
-  image: minikube:5000/books
+  name: books-api
+  image: localhost:5000/books:3646c2d
   replicas: 3
   ports:
     - name: http
@@ -15,14 +15,14 @@ app:
       value: json
     - name: LOG_LEVEL
       value: INFO
-    - name: DB_CONNECTION_STRING
+    - name: ASYNCPG_SQLA_CONNECTION_STRING
       value: postgresql+asyncpg://postgres:postgres@postgres:5432/postgres
     - name: ELASTIC_APM_ENABLED
       value: "false"
 
 postgres:
   name: postgres
-  image: postgres:13
+  image: postgres:15
   replicas: 1
   ports:
     - name: tcp
