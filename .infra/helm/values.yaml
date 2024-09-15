@@ -4,7 +4,7 @@ global:
 app:
   version: 0.0.1
   name: books-api
-  image: localhost:5000/books:8149f55
+  image: localhost:5000/books:latest
   replicas: 3
   ports:
     - name: http

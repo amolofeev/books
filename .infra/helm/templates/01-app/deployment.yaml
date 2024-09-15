@@ -2,6 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.app.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/instance: {{ .Values.app.name }}
+    app.kubernetes.io/name: {{ .Values.app.name }}
 spec:
   strategy:
     type: RollingUpdate
@@ -11,14 +15,15 @@ spec:
   replicas: {{ .Values.app.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.app.name }}
-      namespace: {{ .Release.Namespace }}
+      app.kubernetes.io/instance: {{ .Values.app.name }}
+      app.kubernetes.io/name: {{ .Values.app.name }}
+      service: http
   template:
     metadata:
       labels:
-        app: {{ .Values.app.name }}
-        namespace: {{ .Release.Namespace }}
-        version: {{ .Values.app.version }}
+        app.kubernetes.io/instance: {{ .Values.app.name }}
+        app.kubernetes.io/name: {{ .Values.app.name }}
+        service: http
     spec:
       initContainers:
         - name: migrations
