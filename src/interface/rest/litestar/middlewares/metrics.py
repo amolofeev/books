@@ -28,10 +28,9 @@ class PrometheusMiddleware(AbstractMiddleware):
         async def wrap_send(message: "Message") -> None:
             if message['type'] == "http.response.start":
                 request_end_ns = time.perf_counter_ns()
-                request_durtion_ms = (request_end_ns - request_start_ns) // 1000000
+                request_duration_ms = (request_end_ns - request_start_ns) // 1000000
                 labels.update({"status_code": message['status']})
-                settings.metrics.http_requests_count.inc(labels)
-                settings.metrics.http_requests_latency.observe(labels, request_durtion_ms)
+                settings.metrics.http_requests_latency_hist.observe(labels, request_duration_ms)
             await send(message)
 
         await self.app(scope, receive, wrap_send)

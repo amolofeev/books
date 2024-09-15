@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Values.app.name }}
     app.kubernetes.io/name: {{ .Values.app.name }}
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app.kubernetes.io/instance: {{ .Values.app.name }}
     app.kubernetes.io/name: {{ .Values.app.name }}

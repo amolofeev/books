@@ -25,18 +25,15 @@ class LogConfig(BaseSettings):
     pod: PodInfo = PodInfo()
 
     EXTRA: dict = {
-        **{f"pod.{k}": v for k, v in pod.model_dump().items()},
+        **{f"pod_{k}": v for k, v in pod.model_dump().items()},
     }
 
 
 class Metrics:
-    http_requests_count = aioprometheus.Counter(
-        "http_requests_count",
-        "http_requests_count",
-    )
-    http_requests_latency = aioprometheus.Summary(
+    http_requests_latency_hist = aioprometheus.Histogram(
         "http_requests_latency",
         "http_requests_latency",
+        buckets=[5, 25, 50, 100, 300, 500, 1000, 5000, 10000]
     )
 
     @staticmethod
