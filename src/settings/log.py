@@ -30,10 +30,10 @@ class LogConfig(BaseSettings):
 
 
 class Metrics:
-    http_requests_latency_hist = aioprometheus.Histogram(
+    http_requests_latency = aioprometheus.Histogram(
         "http_requests_latency",
         "http_requests_latency",
-        buckets=[5, 25, 50, 100, 300, 500, 1000, 5000, 10000]
+        buckets=[50, 100, 300, 500, 1000, 2000, 5000, 10000]
     )
 
     @staticmethod

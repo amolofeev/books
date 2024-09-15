@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/name: {{ .Values.app.name }}
 spec:
   endpoints:
-    - interval: 1s
+    - interval: 15s
       path: /metrics
       port: http
   selector:

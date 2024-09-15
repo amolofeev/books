@@ -56,7 +56,7 @@ spec:
                   fieldPath: status.podIP
             {{ toYaml .Values.app.env | nindent 12 }}
       containers:
-        - name: backend
+        - name: {{ .Values.app.name }}
           image: {{ .Values.app.image }}
           env:
             - name: APP_NAME
