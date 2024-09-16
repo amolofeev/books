@@ -593,6 +593,21 @@
                 }
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "98"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
           }
         ]
       },
@@ -627,6 +642,19 @@
           "legendFormat": "100",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(.98, sum by(le) (rate(http_requests_latency_bucket[1m])))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "98",
+          "range": true,
+          "refId": "AA"
         },
         {
           "datasource": {
@@ -743,32 +771,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "backend"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -796,7 +799,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by (container) (rate(http_requests_latency_sum[1m]) / rate(http_requests_latency_count[1m]))",
+          "expr": "sum(increase(http_requests_latency_sum [1m])) by (container)\n     / sum(increase(http_requests_latency_count[1m])) by (container) < +Inf\n  or sum(increase(http_requests_latency_count[1m])) by (container)\n",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -991,7 +994,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by (pod_node) (rate(http_requests_latency_sum[1m]) / rate(http_requests_latency_count[1m]))",
+          "expr": "sum(increase(http_requests_latency_sum [1m])) by (pod_node)\n     / sum(increase(http_requests_latency_count[1m])) by (pod_node) < +Inf\n  or sum(increase(http_requests_latency_count[1m])) by (pod_node)\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -1774,6 +1777,6 @@
   "timezone": "browser",
   "title": "Cluster / RPS / Latency",
   "uid": "bdxz0iwxdiygwa",
-  "version": 4,
+  "version": 5,
   "weekStart": ""
 }
