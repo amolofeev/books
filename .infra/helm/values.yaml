@@ -3,7 +3,7 @@ global:
 
 app:
   version: 0.0.1
-  name: books-api
+  name: books
   image: localhost:5000/books:latest
   replicas: 3
   ports:
@@ -16,7 +16,7 @@ app:
     - name: LOG_LEVEL
       value: INFO
     - name: ASYNCPG_SQLA_CONNECTION_STRING
-      value: postgresql+asyncpg://postgres:postgres@postgres:5432/postgres
+      value: postgresql+asyncpg://postgres:postgres@postgres-books:5432/postgres
     - name: ELASTIC_APM_ENABLED
       value: "false"
 
