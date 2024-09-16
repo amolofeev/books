@@ -877,7 +877,7 @@
         "x": 12,
         "y": 27
       },
-      "id": 10,
+      "id": 14,
       "options": {
         "legend": {
           "calcs": [],
@@ -897,14 +897,14 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(.98, sum by(le, container) (rate(http_requests_latency_bucket[1m])))",
+          "expr": "sum(increase(http_requests_latency_sum [1m])) by (pod_node)\n     / sum(increase(http_requests_latency_count[1m])) by (pod_node) < +Inf\n  or sum(increase(http_requests_latency_count[1m])) by (pod_node)\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Application 98%",
+      "title": "Node AVG",
       "type": "timeseries"
     },
     {
@@ -974,7 +974,7 @@
         "x": 0,
         "y": 35
       },
-      "id": 14,
+      "id": 10,
       "options": {
         "legend": {
           "calcs": [],
@@ -994,14 +994,14 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(increase(http_requests_latency_sum [1m])) by (pod_node)\n     / sum(increase(http_requests_latency_count[1m])) by (pod_node) < +Inf\n  or sum(increase(http_requests_latency_count[1m])) by (pod_node)\n",
+          "expr": "histogram_quantile(.98, sum by(le, container) (rate(http_requests_latency_bucket[1m])))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Node AVG",
+      "title": "Application 98%",
       "type": "timeseries"
     },
     {
@@ -1777,6 +1777,6 @@
   "timezone": "browser",
   "title": "Cluster / RPS / Latency",
   "uid": "bdxz0iwxdiygwa",
-  "version": 5,
+  "version": 6,
   "weekStart": ""
 }
