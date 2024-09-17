@@ -11,7 +11,7 @@ from src.domain.services.m2m import m2m_author_book_create, m2m_category_book_cr
 
 async def test_get_book_by_id(pg_container: Container, uow: UnitOfWork) -> None:
     book = BookDTOFactory.create()
-    async with uow:
+    async with uow.connection() as conn, conn.transaction():
         await uow.book.create(book)
 
     book_aggregate_dto = await get_by_id(book.id)
@@ -28,7 +28,7 @@ async def test_get_books_by_category(pg_container: Container, uow: UnitOfWork) -
     category = await create_category(category.name, category.parent_id)
 
     book = BookDTOFactory.create()
-    async with uow:
+    async with uow.connection() as conn, conn.transaction():
         await uow.book.create(book)
 
     await m2m_category_book_create(category.id, book.id)
@@ -39,7 +39,7 @@ async def test_get_books_by_category(pg_container: Container, uow: UnitOfWork) -
 
 async def test_get_books_by_author(pg_container: Container, uow: UnitOfWork) -> None:
     book = BookDTOFactory.create()
-    async with uow:
+    async with uow.connection() as conn, conn.transaction():
         await uow.book.create(book)
 
     author = AuthorDTOFactory.create()

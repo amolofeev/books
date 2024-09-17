@@ -11,7 +11,7 @@ async def m2m_author_book_create(
     book_id: uuid.UUID | str,
     uow: UnitOfWork = Provide["uow"],
 ) -> None:
-    async with uow:
+    async with uow.connection() as conn, conn.transaction():
         return await uow.m2m_author_book.create(author_id, book_id)
 
 
@@ -21,7 +21,7 @@ async def m2m_author_book_delete(
     book_id: uuid.UUID | str,
     uow: UnitOfWork = Provide["uow"],
 ) -> None:
-    async with uow:
+    async with uow.connection():
         return await uow.m2m_author_book.delete(author_id, book_id)
 
 
@@ -31,7 +31,7 @@ async def m2m_category_book_create(
     book_id: uuid.UUID | str,
     uow: UnitOfWork = Provide["uow"],
 ) -> None:
-    async with uow:
+    async with uow.connection() as conn, conn.transaction():
         return await uow.m2m_category_book.create(category_id, book_id)
 
 
@@ -41,7 +41,7 @@ async def m2m_category_book_delete(
     book_id: uuid.UUID | str,
     uow: UnitOfWork = Provide["uow"],
 ) -> None:
-    async with uow:
+    async with uow.connection() as conn, conn.transaction():
         return await uow.m2m_category_book.delete(category_id, book_id)
 
 
@@ -51,7 +51,7 @@ async def set_categories_for_book(
     categories: list[int],
     uow: UnitOfWork = Provide["uow"],
 ):
-    async with uow:
+    async with uow.connection():
         return await uow.m2m_category_book.set_categories_for_book(
             book_id,
             categories,

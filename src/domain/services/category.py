@@ -10,7 +10,7 @@ async def create_category(
     parent_id: int = None,
     uow: UnitOfWork = Provide["uow"],
 ) -> CategoryDTO:
-    async with uow:
+    async with uow.connection():
         return await uow.category.create(name, parent_id)
 
 
@@ -18,13 +18,14 @@ async def create_category(
 async def get_category_list(
     uow: UnitOfWork = Provide["uow"],
 ) -> list[CategoryDTO]:
-    async with uow:
-        return await uow.category.get_list()
+    async with uow.connection() as conn:
+        async with conn.transaction():
+            return await uow.category.get_list()
 
 
 @inject
 async def get_default_category(
     uow: UnitOfWork = Provide["uow"],
 ) -> int:
-    async with uow:
+    async with uow.connection():
         return await uow.category.get_default_category_id()

@@ -9,5 +9,5 @@ async def create_author(
     name: str,
     uow: UnitOfWork = Provide["uow"],
 ) -> AuthorDTO:
-    async with uow:
+    async with uow.connection() as conn, conn.transaction():
         return await uow.author.create(name)

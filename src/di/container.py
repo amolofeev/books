@@ -1,5 +1,6 @@
 # pylint: disable=c-extension-no-member
 import dataclasses
+from contextlib import asynccontextmanager
 # import os
 # import pathlib
 from typing import Any
@@ -35,22 +36,12 @@ class UnitOfWork:
     m2m_category_book: IM2MCategoryBookDAO
     storage: IStorageDAO
 
-    @property
-    def connection(self):
-        return PGConnection.get()
-
-    async def __aenter__(self) -> None:
-        _connection = await self.pg_connection_pool.connect()
-        transaction = await _connection.begin()
-        PGConnection.set(_connection)
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        _connection = PGConnection.get()
-        if exc_type is None:
-            await _connection.commit()
-        else:
-            await _connection.rollback()
-        await _connection.close()
+    @asynccontextmanager
+    async def connection(self):
+        async with self.pg_connection_pool.acquire() as conn:
+            _token = PGConnection.set(conn)
+            yield conn
+            PGConnection.reset(_token)
 
 
 class Container(containers.DeclarativeContainer):

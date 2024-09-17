@@ -5,7 +5,7 @@ from src.domain.services.book import update_book
 
 async def test_partial_update(pg_container: Container, uow: UnitOfWork) -> None:
     book = BookDTOFactory.create(title="old title")
-    async with uow:
+    async with uow.connection() as conn, conn.transaction():
         await uow.book.create(book)
 
     new_title = "new title"

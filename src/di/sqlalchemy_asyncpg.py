@@ -1,3 +1,4 @@
+import asyncpg
 from dependency_injector import containers, providers
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -15,14 +16,15 @@ config = AsyncpgSqlaConfig()
 
 
 async def _init_pg_pool():
-    pool = create_async_engine(
-        url=config.CONNECTION_STRING,
-        pool_timeout=config.CONNECTION_TIMEOUT,
-        pool_size=config.MAX_POOL_SIZE,
+    pool = await asyncpg.create_pool(
+        dsn=config.CONNECTION_STRING,
+        timeout=config.CONNECTION_TIMEOUT,
+        min_size=config.MIN_POOL_SIZE,
+        max_size=config.MAX_POOL_SIZE,
     )
     yield pool
 
-    await pool.dispose(True)
+    await pool.close()
 
 
 class AsyncpgSQLAContainer(containers.DeclarativeContainer):
