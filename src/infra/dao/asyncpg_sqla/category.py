@@ -5,9 +5,8 @@ import sqlalchemy as sa
 
 from src.domain.dto.category import CategoryDTO
 from src.domain.interface.category import ICategoryDAO
-from src.infra.dao.asyncpg_sqla.db import fetch, fetchrow, execute, fetchval
+from src.infra.dao.asyncpg_sqla.db import execute, fetch, fetchrow, fetchval
 from src.infra.db.postgresql.public import category, m2m_category_book
-from src.vars import PGConnection
 
 
 DEFAULT_CATEGORY_NAME = "-----"

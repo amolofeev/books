@@ -5,9 +5,8 @@ import sqlalchemy as sa
 
 from src.domain.dto.author import AuthorDTO
 from src.domain.interface.author import IAuthorDAO
-from src.infra.dao.asyncpg_sqla.db import fetchrow, fetch
+from src.infra.dao.asyncpg_sqla.db import fetch, fetchrow
 from src.infra.db.postgresql.public import author, m2m_author_book
-from src.vars import PGConnection
 
 
 class AuthorAsyncpgSQLADAO(IAuthorDAO):

@@ -1,5 +1,6 @@
-from src.vars import PGConnection
 from sqlalchemy.dialects.postgresql.asyncpg import dialect
+
+from src.vars import PGConnection
 
 
 def _compile(stmt, dialect=dialect()):

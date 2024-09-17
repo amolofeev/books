@@ -4,6 +4,7 @@ from src.di.container import Container, UnitOfWork
 from src.domain.dto.book import BookDTO
 from src.domain.factory.book import BookDTOFactory
 
+
 async def test_create_book_dao(pg_container: Container) -> None:
     uow: UnitOfWork = await pg_container.uow()
     book: BookDTO = BookDTOFactory.create()

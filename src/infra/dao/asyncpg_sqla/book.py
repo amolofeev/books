@@ -6,7 +6,7 @@ from sqlalchemy.exc import NoResultFound
 
 from src.domain.dto.book import BookDTO
 from src.domain.interface.book import IBookDAO
-from src.infra.dao.asyncpg_sqla.db import fetch, fetchrow, execute, fetchval
+from src.infra.dao.asyncpg_sqla.db import execute, fetch, fetchrow, fetchval
 from src.infra.db.postgresql.public import book, m2m_author_book, m2m_category_book
 from src.vars import PGConnection
 
