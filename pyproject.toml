@@ -85,7 +85,7 @@ select = [
     "NPY", # NumPy-specific rules
     "PERF", # Perflint
     "FURB", # refurb
-    "DOC", # pydoclint
+#    "DOC", # pydoclint #  Selection `DOC` has no effect because preview is not enabled
     "RUF", # Ruff-specific rules
 ]
 ignore = [
@@ -95,6 +95,11 @@ ignore = [
     "D103", # Missing docstring in public function
     "D104", # Missing docstring in public package
     "D107", # Missing docstring in `...`
+    "D211", # no-blank-line-before-class
+    "D213", # multi-line-summary-second-line
     "DOC402", # `yield` is not documented in docstring
     "TCH001", # Move application import `...` into a type-checking block
 ]
+
+[tool.ruff.lint.isort]
+no-sections = false
