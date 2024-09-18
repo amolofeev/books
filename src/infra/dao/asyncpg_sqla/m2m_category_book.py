@@ -18,11 +18,12 @@ class M2MCategoryBookAsyncpgSQLADAO(IM2MCategoryBookDAO):
         rm_stmt = (
             sa.delete(m2m_category_book)
             .where(
-                sa.and_(
+                # TODO: fix /
+                # sa.and_(
                     m2m_category_book.c.book_id == book_id,
-                    m2m_category_book.c.category_id.notin_(categories),
-                ),
-            ),
+                    # m2m_category_book.c.category_id.notin_(categories),
+                # ),
+            )
         )
         await execute(rm_stmt)
 

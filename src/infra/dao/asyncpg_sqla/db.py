@@ -4,6 +4,7 @@ from src.vars import PGConnection
 
 
 def _compile(stmt, dialect=dialect()):
+    # TODO:  NOT IN (__[POSTCOMPILE_...])
     c = stmt.compile(dialect=dialect)
     return c.string, *c.params.values()
 
