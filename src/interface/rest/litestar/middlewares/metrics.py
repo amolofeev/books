@@ -18,7 +18,9 @@ class PrometheusMiddleware(AbstractMiddleware):
 
     async def __call__(self, scope: "Scope", receive: "Receive", send: "Send") -> None:
         labels = {
-            **settings.log.EXTRA,
+            'service': settings.app.NAME,
+            'node': settings.log.pod.node,
+            'image': settings.log.pod.image,
             "path": path_to_route_name(scope["app"], scope["path"]),
             "method": scope["method"],
         }

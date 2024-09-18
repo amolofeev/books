@@ -121,14 +121,14 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by(container) (rate(http_requests_latency_count{status_code=~\"5.*\"}[1m]))",
+          "expr": "sum by(service) (rate(http_requests_latency_count{status_code=~\"5.*\"}[1m]))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Application",
+      "title": "Service",
       "type": "timeseries"
     },
     {
@@ -218,7 +218,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by(pod_node) (rate(http_requests_latency_count{status_code=~\"5.*\"}[1m]))",
+          "expr": "sum by(node) (rate(http_requests_latency_count{status_code=~\"5.*\"}[1m]))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -338,7 +338,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by(container) (rate(http_requests_latency_count[1m]))",
+          "expr": "sum by(service) (rate(http_requests_latency_count[1m]))",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -346,7 +346,7 @@
           "refId": "B"
         }
       ],
-      "title": "Appication",
+      "title": "Service",
       "type": "timeseries"
     },
     {
@@ -436,7 +436,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by(pod_node) (rate(http_requests_latency_count[1m]))",
+          "expr": "sum by(node) (rate(http_requests_latency_count[1m]))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -799,7 +799,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(increase(http_requests_latency_sum [1m])) by (container)\n     / sum(increase(http_requests_latency_count[1m])) by (container) < +Inf\n  or sum(increase(http_requests_latency_count[1m])) by (container)\n",
+          "expr": "sum(increase(http_requests_latency_sum [1m])) by (service)\n     / sum(increase(http_requests_latency_count[1m])) by (service) < +Inf\n  or sum(increase(http_requests_latency_count[1m])) by (service)\n",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -807,7 +807,7 @@
           "refId": "A"
         }
       ],
-      "title": "Application AVG",
+      "title": "Service AVG",
       "type": "timeseries"
     },
     {
@@ -897,7 +897,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(increase(http_requests_latency_sum [1m])) by (pod_node)\n     / sum(increase(http_requests_latency_count[1m])) by (pod_node) < +Inf\n  or sum(increase(http_requests_latency_count[1m])) by (pod_node)\n",
+          "expr": "sum(increase(http_requests_latency_sum [1m])) by (node)\n     / sum(increase(http_requests_latency_count[1m])) by (node) < +Inf\n  or sum(increase(http_requests_latency_count[1m])) by (node)\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -994,14 +994,14 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(.98, sum by(le, container) (rate(http_requests_latency_bucket[1m])))",
+          "expr": "histogram_quantile(.98, sum by(le, service) (rate(http_requests_latency_bucket[1m])))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Application 98%",
+      "title": "Service 98%",
       "type": "timeseries"
     },
     {
@@ -1091,7 +1091,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(.98, sum by(le, pod_node) (rate(http_requests_latency_bucket[1m])))",
+          "expr": "histogram_quantile(.98, sum by(le, node) (rate(http_requests_latency_bucket[1m])))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -1160,7 +1160,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1317,7 +1318,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1474,7 +1476,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1631,7 +1634,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1766,13 +1770,13 @@
     "list": []
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Cluster / RPS / Latency",
   "uid": "bdxz0iwxdiygwa",
-  "version": 7,
+  "version": 9,
   "weekStart": ""
 }

@@ -2,6 +2,7 @@ global:
   hostname: k8s.local
 
 app:
+  # version: git commit
   version: 0.0.1
   name: books
   image: localhost:5000/books:latest

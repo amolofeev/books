@@ -4,12 +4,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class PodInfo(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="POD_", env_file=".env", extra="ignore")
-    name: str | None
-    ip: str | None
     node: str | None
-    namespace: str | None
     image: str | None
-    version: str | None
 
 
 class APM(BaseSettings):
@@ -25,7 +21,7 @@ class LogConfig(BaseSettings):
     pod: PodInfo = PodInfo()
 
     EXTRA: dict = {
-        **{f"pod_{k}": v for k, v in pod.model_dump().items()},
+        'pod': pod.model_dump(),
     }
 
 
