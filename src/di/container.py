@@ -13,7 +13,7 @@ from src.di.repository.book import BookRepositoryContainer
 from src.di.repository.category import CategoryRepositoryContainer
 from src.di.repository.m2m_author_book import M2MAuthorBookRepositoryContainer
 from src.di.repository.m2m_category_book import M2MCategoryBookRepositoryContainer
-from src.di.sqlalchemy_asyncpg import AsyncpgSQLAContainer
+from src.di.sqlalchemy_asyncpg import AsyncpgSQLAContainer, config as pg_config
 from src.domain.interface.author import IAuthorDAO
 from src.domain.interface.book import IBookDAO
 from src.domain.interface.category import ICategoryDAO
@@ -23,12 +23,9 @@ from src.domain.interface.storage import IStorageDAO
 from src.vars import PGConnection
 
 
-# from jinja2 import Environment, FileSystemLoader, select_autoescape
-
-
 @dataclasses.dataclass
 class UnitOfWork:
-    pg_connection_pool: Any
+    pg_pool: Any
     book: IBookDAO
     author: IAuthorDAO
     category: ICategoryDAO
@@ -38,7 +35,7 @@ class UnitOfWork:
 
     @asynccontextmanager
     async def connection(self):
-        async with self.pg_connection_pool.acquire() as conn:
+        async with self.pg_pool.acquire(timeout=pg_config.POOL_TIMEOUT) as conn:
             _token = PGConnection.set(conn)
             yield conn
             PGConnection.reset(_token)
@@ -50,13 +47,7 @@ class Container(containers.DeclarativeContainer):
             "src.domain",
         ],
     )
-    # render = providers.Singleton(
-    #     Environment,
-    #     loader=FileSystemLoader(
-    #         pathlib.Path(os.getcwd())/'src/interface/rest/litestar/templates'
-    #     ),
-    #     autoescape=select_autoescape()
-    # )
+
     _pg_connection_pool = providers.Container(
         AsyncpgSQLAContainer,
     )
@@ -70,7 +61,7 @@ class Container(containers.DeclarativeContainer):
 
     uow = providers.Factory(
         UnitOfWork,
-        pg_connection_pool=_pg_connection_pool.pool,
+        pg_pool=_pg_connection_pool.pool,
         book=_book_repository.repository,
         author=_author_repository.repository,
         category=_category_repository.repository,
