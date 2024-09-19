@@ -17,6 +17,7 @@ from src.di.container import Container, init_container
 from .middlewares.apm import ASGITracingMiddleware
 from .middlewares.metrics import PrometheusMiddleware
 from .views.htmx.router import router as htmx_router
+from .views.rest.common import TestHandler
 
 
 htmx_router = Router(
@@ -65,6 +66,7 @@ app = Litestar(
     on_shutdown=[shutdown],
     route_handlers=[
         create_static_files_router(path="/static", directories=["/www/media"]),
+        TestHandler,
         htmx_router,
     ],
     middleware=[
