@@ -3,10 +3,10 @@ from sqlalchemy.dialects.postgresql.asyncpg import dialect
 from src.vars import PGConnection
 
 
+# TODO: do it over Connection/Cursor class directly
 def _compile(stmt, dialect=dialect()):
-    # TODO:  NOT IN (__[POSTCOMPILE_...])
-    c = stmt.compile(dialect=dialect)
-    return c.string, *c.params.values()
+    c = stmt.compile(dialect=dialect, compile_kwargs={"render_postcompile": True})
+    return c.string, *list(map(lambda key: c.params[key], c.positiontup))
 
 
 async def fetch(stmt):
@@ -29,7 +29,6 @@ async def execute(stmt):
     # prevent autocommit
     assert conn.is_in_transaction()
     return await conn.execute(*_compile(stmt))
-
 
 # async def executemany(stmt):
 #     conn = PGConnection.get()

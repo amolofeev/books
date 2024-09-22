@@ -22,7 +22,6 @@ class BookAsyncpgSQLADAO(IBookDAO):
         return book_dto
 
     async def update_book(self, book_id: uuid.UUID | str, /, **kwargs) -> None:
-        conn = PGConnection.get()
         stmt = (
             sa.update(book)
             .where(book.c.id == book_id)
