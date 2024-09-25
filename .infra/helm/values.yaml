@@ -16,7 +16,7 @@ app:
       value: json
     - name: LOG_LEVEL
       value: INFO
-    - name: ASYNCPG_SQLA_CONNECTION_STRING
+    - name: ASYNCPG_DSN
       value: postgresql://postgres:postgres@postgres-books:5432/postgres
     - name: ELASTIC_APM_ENABLED
       value: "false"
