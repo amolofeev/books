@@ -29,7 +29,7 @@ class Metrics:
     http_requests_latency = aioprometheus.Histogram(
         "http_requests_latency",
         "http_requests_latency",
-        buckets=[50, 100, 300, 500, 1000, 2000, 5000, 10000]
+        buckets=[10, 25, 50, 100, 300, 500, 1000, 2000, 5000, 10000]
     )
 
     @staticmethod
