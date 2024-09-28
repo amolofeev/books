@@ -12,13 +12,8 @@ from .categories import CategoriesHandler
 
 @get(path="/")
 async def index() -> Template:
-    default_category = await get_default_category()
-    books_in_default_category = await get_list_by_category_id(default_category)
     return Template(
         "index.html",
-        context={
-            "books": books_in_default_category,
-        },
     )
 
 
