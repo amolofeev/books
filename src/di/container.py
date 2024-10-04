@@ -7,12 +7,12 @@ from typing import Any
 
 from dependency_injector import containers, providers
 
-from src.di.file_storage import FileStorageContainer
-from src.di.repository.author import AuthorRepositoryContainer
-from src.di.repository.book import BookRepositoryContainer
-from src.di.repository.category import CategoryRepositoryContainer
-from src.di.repository.m2m_author_book import M2MAuthorBookRepositoryContainer
-from src.di.repository.m2m_category_book import M2MCategoryBookRepositoryContainer
+from .file_storage import FileStorageContainer
+from .author import AuthorRepositoryContainer
+from .book import BookRepositoryContainer
+from .category import CategoryRepositoryContainer
+from .m2m_author_book import M2MAuthorBookRepositoryContainer
+from .m2m_category_book import M2MCategoryBookRepositoryContainer
 from src.di.sqlalchemy_asyncpg import AsyncpgSQLAContainer, config as pg_config
 from src.domain.interface.author import IAuthorDAO
 from src.domain.interface.book import IBookDAO
