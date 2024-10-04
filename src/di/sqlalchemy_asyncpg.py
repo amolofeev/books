@@ -82,4 +82,4 @@ class SQLAConnection(asyncpg.Connection):
     ):
         if isinstance(query, ClauseElement):
             query, args = _compile(query)
-        return super().cursor(query, *args, timeout=timeout)
+        return super().cursor(query, *args, prefetch=prefetch, timeout=timeout, record_class=record_class)
