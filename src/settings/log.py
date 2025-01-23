@@ -4,8 +4,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class PodInfo(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="POD_", env_file=".env", extra="ignore")
-    node: str | None
-    image: str | None
+    node: str | None = None
+    image: str | None = None
 
 
 class APM(BaseSettings):

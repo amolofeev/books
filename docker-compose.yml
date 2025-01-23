@@ -1,4 +1,9 @@
 services:
+  python:
+    image: python:3.12
+    volumes:
+      - ./:/tmp
+
   postgres:
     image: postgres:15
     environment:
