@@ -82,11 +82,11 @@ app = Litestar(
         log_exceptions="always",
         configure_root_logger=False,
         handlers={
-            "queue_listener": {
-                "class": "litestar.logging.standard.QueueListenerHandler",
-                "level": settings.settings.log.LEVEL,
-                "formatter": settings.settings.log.FORMATTER,
-            },
+            # "queue_listener": {
+            #     "class": "litestar.logging.standard.QueueListenerHandler",
+            #     "level": settings.settings.log.LEVEL,
+            #     "formatter": settings.settings.log.FORMATTER,
+            # },
             **settings.CONFIG_DICT["handlers"],
         },
         formatters=settings.CONFIG_DICT["formatters"],
