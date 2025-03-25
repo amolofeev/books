@@ -1,7 +1,7 @@
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import UUID
 
-
+# TODO: https://stackoverflow.com/questions/53523529/alembic-revision-autogenerate-produces-redundant-foreign-key-migrations
 meta = sa.MetaData(schema="public")
 
 
