@@ -1,42 +1,40 @@
-from typing import Optional
-
-from prometheus_client import Counter, Summary
+import aioprometheus
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class PodInfo(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix='POD_', env_file='.env', extra='ignore')
-    name: Optional[str]
-    ip: Optional[str]
-    node: Optional[str]
-    namespace: Optional[str]
-    image: Optional[str]
-    version: Optional[str]
+    model_config = SettingsConfigDict(env_prefix="POD_", env_file=".env", extra="ignore")
+    node: str | None = None
+    image: str | None = None
 
 
 class APM(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix='ELASTIC_APM_', env_file='.env', extra='ignore')
+    model_config = SettingsConfigDict(env_prefix="ELASTIC_APM_", env_file=".env", extra="ignore")
     ENABLED: bool
 
 
 class LogConfig(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix='LOG_', env_file='.env', extra='ignore')
-    LEVEL: str = 'INFO'
-    FORMATTER: Optional[str] = 'json'
+    model_config = SettingsConfigDict(env_prefix="LOG_", env_file=".env", extra="ignore")
+    LEVEL: str = "INFO"
+    FORMATTER: str | None = "json"
     apm: APM = APM()
     pod: PodInfo = PodInfo()
 
     EXTRA: dict = {
-        **{f'pod.{k}': v for k, v in pod.model_dump().items()}
+        'pod': pod.model_dump(),
     }
 
 
 class Metrics:
-    requests_count = Counter(
-        'requests_count', 'rps',
-        ['url', 'method', 'status_code']
+    http_requests_latency = aioprometheus.Histogram(
+        "http_requests_latency",
+        "http_requests_latency",
+        buckets=[10, 25, 50, 100, 300, 500, 1000, 2000, 5000, 10000]
     )
-    requests_latency = Summary(
-        'requests_latency', 'request latency',
-        ['url', 'method', 'status_code']
-    )
+
+    @staticmethod
+    def render() -> tuple[bytes, dict]:
+        return aioprometheus.render(
+            aioprometheus.REGISTRY,
+            [],
+        )

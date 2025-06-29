@@ -1,97 +1,77 @@
 # pylint: disable=c-extension-no-member
 import dataclasses
 from contextlib import asynccontextmanager
+# import os
+# import pathlib
 from typing import Any
 
 from dependency_injector import containers, providers
-from jinja2 import Environment, FileSystemLoader, select_autoescape
-from sqlalchemy.ext.asyncio import create_async_engine
 
-from src.dao.books import BooksDAO
-from src.dao.m2m_tag_book import M2MTagBookDAO
-from src.dao.tags import TagsDAO
-from src.interface.books import IBookDAO
-from src.interface.tags import ITagsDAO
-from src.repository.books import BookRepository
-from src.repository.m2m_tag_book import M2MTagBookRepository
-from src.repository.tags import TagsRepository
-from src.settings import settings
+from .file_storage import FileStorageContainer
+from .author import AuthorRepositoryContainer
+from .book import BookRepositoryContainer
+from .category import CategoryRepositoryContainer
+from .m2m_author_book import M2MAuthorBookRepositoryContainer
+from .m2m_category_book import M2MCategoryBookRepositoryContainer
+from src.di.sqlalchemy_asyncpg import AsyncpgSQLAContainer, config as pg_config
+from src.domain.interface.author import IAuthorDAO
+from src.domain.interface.book import IBookDAO
+from src.domain.interface.category import ICategoryDAO
+from src.domain.interface.m2m_author_book import IM2MAuthorBookDAO
+from src.domain.interface.m2m_category_book import IM2MCategoryBookDAO
+from src.domain.interface.storage import IStorageDAO
 from src.vars import PGConnection
 
 
-async def init_pg_pool():
-    pool = create_async_engine(
-        url=settings.db.CONNECTION_STRING,
-        pool_timeout=settings.db.CONNECTION_TIMEOUT,
-        pool_size=settings.db.MIN_POOL_SIZE,
-    )
-    yield pool
+@dataclasses.dataclass
+class UnitOfWork:
+    pg_pool: Any
+    book: IBookDAO
+    author: IAuthorDAO
+    category: ICategoryDAO
+    m2m_author_book: IM2MAuthorBookDAO
+    m2m_category_book: IM2MCategoryBookDAO
+    storage: IStorageDAO
 
-    await pool.dispose(True)
-
-
-@asynccontextmanager
-async def uow_manager(**kwargs):
-    @dataclasses.dataclass
-    class UnitOfWork:
-        connection_pool: Any
-        books: IBookDAO
-        tags: ITagsDAO
-        m2m: M2MTagBookDAO
-
-        @property
-        def connection(self):
-            return PGConnection.get()
-
-    uow = UnitOfWork(**kwargs)
-    async with uow.connection_pool.begin() as conn:
-        PGConnection.set(conn)
-        yield uow
+    @asynccontextmanager
+    async def connection(self):
+        async with self.pg_pool.acquire(timeout=pg_config.POOL_TIMEOUT) as conn:
+            _token = PGConnection.set(conn)
+            yield conn
+            PGConnection.reset(_token)
 
 
 class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
         packages=[
-            "src.views",
-            "src.services",
-        ]
-    )
-    render = providers.Singleton(
-        Environment,
-        loader=FileSystemLoader("/www/templates"),
-        autoescape=select_autoescape()
-    )
-    _connection_pool = providers.Resource(
-        init_pg_pool,
-    )
-    _books_dao = providers.Singleton(BooksDAO)
-    _books_repo = providers.Singleton(
-        BookRepository,
-        dao=_books_dao,
+            "src.domain",
+        ],
     )
 
-    _tags_dao = providers.Singleton(TagsDAO)
-    _tags_repo = providers.Singleton(
-        TagsRepository,
-        dao=_tags_dao,
+    _pg_connection_pool = providers.Container(
+        AsyncpgSQLAContainer,
     )
 
-    _m2m_dao = providers.Singleton(M2MTagBookDAO)
-    _m2m_repo = providers.Singleton(
-        M2MTagBookRepository,
-        dao=_m2m_dao,
-    )
+    _book_repository = providers.Container(BookRepositoryContainer)
+    _author_repository = providers.Container(AuthorRepositoryContainer)
+    _category_repository = providers.Container(CategoryRepositoryContainer)
+    _m2m_author_book_repository = providers.Container(M2MAuthorBookRepositoryContainer)
+    _m2m_category_book_repository = providers.Container(M2MCategoryBookRepositoryContainer)
+    _file_storage = providers.Container(FileStorageContainer)
 
     uow = providers.Factory(
-        uow_manager,
-        books=_books_repo,
-        tags=_tags_repo,
-        m2m=_m2m_repo,
-        connection_pool=_connection_pool,
+        UnitOfWork,
+        pg_pool=_pg_connection_pool.pool,
+        book=_book_repository.repository,
+        author=_author_repository.repository,
+        category=_category_repository.repository,
+        m2m_author_book=_m2m_author_book_repository.repository,
+        m2m_category_book=_m2m_category_book_repository.repository,
+        storage=_file_storage.repository,
     )
 
 
-async def init_container(**kwargs) -> containers.DeclarativeContainer:
+async def init_container(**kwargs) -> Container:
     defaults = {
         **kwargs,
     }

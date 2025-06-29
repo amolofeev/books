@@ -1,16 +1,17 @@
-import sys, pathlib
+import pathlib
+import sys
 
 sys.path.append(
-    pathlib.Path(__file__).parent.parent.absolute().as_posix()
+    pathlib.Path(__file__).parent.parent.absolute().as_posix(),
 )
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
-from src.settings import settings
-from src.db import public
+from sqlalchemy import engine_from_config, pool
+
+from src.di.sqlalchemy_asyncpg import config as settings
+from src.infra.db.postgresql import public
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -18,10 +19,10 @@ config = context.config
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
-DB_CONNECTION_DSN = settings.db.CONNECTION_STRING.replace('+asyncpg', '')
+
 config.set_main_option(
     "sqlalchemy.url",
-    DB_CONNECTION_DSN,
+    settings.DSN,
 )
 # add your model's MetaData object here
 # for 'autogenerate' support
@@ -71,7 +72,7 @@ def run_migrations_online():
 
     """
     conf = config.get_section(config.config_ini_section)
-    conf['sqlalchemy.url'] = conf['sqlalchemy.url']
+    conf["sqlalchemy.url"] = conf["sqlalchemy.url"]
     connectable = engine_from_config(
         conf,
         prefix="sqlalchemy.",
