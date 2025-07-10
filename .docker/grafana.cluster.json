@@ -1,4 +1,35 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "11.3.0"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -18,8 +49,23 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 28,
-  "links": [],
+  "id": null,
+  "links": [
+    {
+      "asDropdown": true,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "rps boilerplate"
+      ],
+      "targetBlank": false,
+      "title": "rps boilerplate",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
+    }
+  ],
   "panels": [
     {
       "collapsed": false,
@@ -36,9 +82,8 @@
     },
     {
       "datasource": {
-        "default": true,
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -114,11 +159,12 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "11.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "sum by(service) (rate(http_requests_latency_count{status_code=~\"5.*\", service=~\"$service\", node=~\"$node\"}[1m]))",
@@ -133,9 +179,8 @@
     },
     {
       "datasource": {
-        "default": true,
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -211,11 +256,12 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "11.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "sum by(node) (rate(http_requests_latency_count{status_code=~\"5.*\", service=~\"$service\", node=~\"$node\"}[1m]))",
@@ -229,6 +275,7 @@
       "type": "timeseries"
     },
     {
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -236,14 +283,14 @@
         "y": 9
       },
       "id": 12,
+      "panels": [],
       "title": "RPS",
       "type": "row"
     },
     {
       "datasource": {
-        "default": true,
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -319,11 +366,12 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "11.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "sum by() (rate(http_requests_latency_count{service=~\"$service\", node=~\"$node\"}[1m]))",
@@ -335,7 +383,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "sum by(service) (rate(http_requests_latency_count{service=~\"$service\", node=~\"$node\"}[1m]))",
@@ -351,9 +399,8 @@
     },
     {
       "datasource": {
-        "default": true,
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -429,11 +476,12 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "11.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "sum by(node) (rate(http_requests_latency_count{service=~\"$service\", node=~\"$node\"}[1m]))",
@@ -461,9 +509,8 @@
     },
     {
       "datasource": {
-        "default": true,
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -630,11 +677,12 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "11.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(1, sum by(le) (rate(http_requests_latency_bucket{service=~\"$service\", node=~\"$node\"}[1m])))",
@@ -646,7 +694,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(.98, sum by(le) (rate(http_requests_latency_bucket{service=~\"$service\", node=~\"$node\"}[1m])))",
@@ -659,7 +707,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(.95, sum by(le) (rate(http_requests_latency_bucket{service=~\"$service\", node=~\"$node\"}[1m])))",
@@ -672,7 +720,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(.75, sum by(le) (rate(http_requests_latency_bucket{service=~\"$service\", node=~\"$node\"}[1m])))",
@@ -685,7 +733,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(.50, sum by(le) (rate(http_requests_latency_bucket{service=~\"$service\", node=~\"$node\"}[1m])))",
@@ -698,7 +746,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(.25, sum by(le) (rate(http_requests_latency_bucket{service=~\"$service\", node=~\"$node\"}[1m])))",
@@ -714,9 +762,8 @@
     },
     {
       "datasource": {
-        "default": true,
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -792,11 +839,12 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "11.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "sum(increase(http_requests_latency_sum{service=~\"$service\", node=~\"$node\"}[1m])) by (service)\n     / sum(increase(http_requests_latency_count{service=~\"$service\", node=~\"$node\"}[1m])) by (service) < +Inf\n  or sum(increase(http_requests_latency_count{service=~\"$service\", node=~\"$node\"}[1m])) by (service)\n",
@@ -812,9 +860,8 @@
     },
     {
       "datasource": {
-        "default": true,
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -890,11 +937,12 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "11.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "sum(increase(http_requests_latency_sum {service=~\"$service\", node=~\"$node\"}[1m])) by (node)\n     / sum(increase(http_requests_latency_count{service=~\"$service\", node=~\"$node\"}[1m])) by (node) < +Inf\n  or sum(increase(http_requests_latency_count{service=~\"$service\", node=~\"$node\"}[1m])) by (node)\n",
@@ -909,9 +957,8 @@
     },
     {
       "datasource": {
-        "default": true,
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -987,11 +1034,12 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "11.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(.98, sum by(le, service) (rate(http_requests_latency_bucket{service=~\"$service\", node=~\"$node\"}[1m])))",
@@ -1006,9 +1054,8 @@
     },
     {
       "datasource": {
-        "default": true,
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1084,11 +1131,12 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "11.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(.98, sum by(le, node) (rate(http_requests_latency_bucket{service=~\"$service\", node=~\"$node\"}[1m])))",
@@ -1113,9 +1161,8 @@
       "panels": [
         {
           "datasource": {
-            "default": true,
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -1160,8 +1207,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1256,7 +1302,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "expr": "sum by(status_code) (rate(http_requests_latency_count{service=~\"$service\", node=~\"$node\"}[1m]))",
@@ -1271,9 +1317,8 @@
         },
         {
           "datasource": {
-            "default": true,
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -1318,8 +1363,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1414,7 +1458,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "expr": "sum by(method) (rate(http_requests_latency_count{service=~\"$service\", node=~\"$node\"}[1m]))",
@@ -1429,9 +1473,8 @@
         },
         {
           "datasource": {
-            "default": true,
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -1476,8 +1519,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1572,7 +1614,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "expr": "histogram_quantile(.98, sum by(le, status_code) (rate(http_requests_latency_bucket{service=~\"$service\", node=~\"$node\"}[1m])))",
@@ -1587,9 +1629,8 @@
         },
         {
           "datasource": {
-            "default": true,
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -1634,8 +1675,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1745,7 +1785,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "expr": "histogram_quantile(.98, sum by(le, method) (rate(http_requests_latency_bucket{service=~\"$service\", node=~\"$node\"}[1m])))",
@@ -1764,26 +1804,32 @@
     }
   ],
   "refresh": "5s",
-  "schemaVersion": 39,
-  "tags": [],
+  "schemaVersion": 40,
+  "tags": [
+    "rps boilerplate"
+  ],
   "templating": {
     "list": [
       {
+        "current": {},
+        "label": "Source",
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      },
+      {
         "allValue": ".*",
-        "current": {
-          "selected": true,
-          "text": "All",
-          "value": "$__all"
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "prometheus"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(http_requests_latency_count,service)",
-        "hide": 0,
         "includeAll": true,
         "label": "Service",
-        "multi": false,
         "name": "service",
         "options": [],
         "query": {
@@ -1793,26 +1839,18 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
         "allValue": ".*",
-        "current": {
-          "selected": true,
-          "text": "All",
-          "value": "$__all"
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "prometheus"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(http_requests_latency_count,node)",
-        "hide": 0,
         "includeAll": true,
         "label": "Node",
-        "multi": false,
         "name": "node",
         "options": [],
         "query": {
@@ -1822,8 +1860,6 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       }
     ]
@@ -1836,6 +1872,6 @@
   "timezone": "browser",
   "title": "Cluster / RPS / Latency",
   "uid": "bdxz0iwxdiygwa",
-  "version": 14,
+  "version": 8,
   "weekStart": ""
 }
