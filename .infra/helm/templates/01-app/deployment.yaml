@@ -12,7 +12,6 @@ spec:
     rollingUpdate:
       maxUnavailable: 1
       maxSurge: 1
-  replicas: {{ .Values.app.replicas }}
   selector:
     matchLabels:
       app.kubernetes.io/instance: {{ .Values.app.name }}
