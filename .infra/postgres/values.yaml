@@ -1,0 +1,24 @@
+postgres:
+  name: postgres-books
+  image: postgres:15
+  replicas: 1
+  ports:
+    - name: tcp
+      containerPort: 5432
+      protocol: TCP
+  service:
+    ports:
+      - protocol: TCP
+        port: 5432
+        targetPort: 5432
+  pvc:
+    accessModes: ["ReadWriteOnce"]
+    storage: "1Gi"
+    containerPath: "/var/lib/postgresql/data"
+  env:
+    - name: POSTGRES_USER
+      value: postgres
+    - name: POSTGRES_DB
+      value: postgres
+    - name: POSTGRES_PASSWORD
+      value: postgres
