@@ -22,8 +22,8 @@ elastic-apm
 tox
 
 # pytest
-pylint==2.17.4
-pytest==7.3.2
+pylint
+pytest
 pytest-asyncio
 pytest-cov
 pytest-mock

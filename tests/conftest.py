@@ -7,7 +7,7 @@ from src.di.container import Container, UnitOfWork, init_container
 
 
 @pytest.fixture
-async def pg_container(event_loop, container: Container) -> Container:  # pylint: disable=unused-argument
+async def pg_container(container: Container) -> Container:  # pylint: disable=unused-argument
     """Fixture for migrations."""
     config = AlembicConfig("alembic.ini")
     alembic_upgrade(config, "head")
