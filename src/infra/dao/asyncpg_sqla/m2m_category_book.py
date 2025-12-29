@@ -4,7 +4,6 @@ import sqlalchemy as sa
 import sqlalchemy.dialects.postgresql as pg_sa
 
 from src.domain.interface.m2m_category_book import IM2MCategoryBookDAO
-from src.infra.dao.asyncpg_sqla.db import execute
 from src.infra.db.postgresql.public import m2m_category_book
 from src.vars import PGConnection
 
@@ -15,6 +14,7 @@ class M2MCategoryBookAsyncpgSQLADAO(IM2MCategoryBookDAO):
         book_id: uuid.UUID | str,
         categories: list[int],
     ) -> None:
+        conn = PGConnection.get()
         rm_stmt = (
             sa.delete(m2m_category_book)
             .where(
@@ -24,7 +24,7 @@ class M2MCategoryBookAsyncpgSQLADAO(IM2MCategoryBookDAO):
                 ),
             )
         )
-        await execute(rm_stmt)
+        await conn.execute(rm_stmt)
 
         if categories:
             add_stmt = (
@@ -37,15 +37,16 @@ class M2MCategoryBookAsyncpgSQLADAO(IM2MCategoryBookDAO):
                     ]
                 )
             )
-            await execute(add_stmt)
+            await conn.execute(add_stmt)
 
     async def create(self, category_id: int, book_id: uuid.UUID | str) -> None:
+        conn = PGConnection.get()
         stmt = (
             pg_sa.insert(m2m_category_book)
             .values(category_id=category_id, book_id=book_id)
             .on_conflict_do_nothing(index_elements=["category_id", "book_id"])
         )
-        await execute(stmt)
+        await conn.execute(stmt)
 
     async def delete(self, category_id: int, book_id: uuid.UUID | str) -> None:
         raise NotImplementedError(self.delete)

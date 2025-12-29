@@ -1,10 +1,11 @@
-from dependency_injector import containers, providers
-from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Tuple
 
 import asyncpg
+from dependency_injector import containers, providers
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import ClauseElement
 from sqlalchemy.dialects.postgresql.asyncpg import PGDialect_asyncpg
+
 from src.settings import settings
 
 
