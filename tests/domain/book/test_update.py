@@ -1,9 +1,9 @@
-from src.di.container import Container, UnitOfWork
+from src.di.container import UnitOfWork
 from src.domain.factory.book import BookDTOFactory
 from src.domain.services.book import update_book
 
 
-async def test_partial_update(pg_container: Container, uow: UnitOfWork) -> None:
+async def test_partial_update(uow: UnitOfWork) -> None:
     book = BookDTOFactory.create(title="old title")
     async with uow.connection() as conn, conn.transaction():
         await uow.book.create(book)
